@@ -20,7 +20,7 @@ node_modules
 x64/
 x86/
 bld/
-[Bb]in/
+Bin/
 [Oo]bj/
 [Ll]og/
 
@@ -74,17 +74,6 @@ artifacts/
 # Chutzpah Test files
 _Chutzpah*
 
-# Visual C++ cache files
-ipch/
-*.aps
-*.ncb
-*.opendb
-*.opensdf
-*.sdf
-*.cachefile
-*.VC.db
-*.VC.VC.opendb
-
 # Visual Studio profiler
 *.psess
 *.vsp
@@ -135,9 +124,6 @@ DocProject/Help/*.hhk
 DocProject/Help/*.hhp
 DocProject/Help/Html2
 DocProject/Help/html
-
-# Click-Once directory
-publish/
 
 # Publish Web Output
 *.[Pp]ublish.xml
@@ -192,7 +178,6 @@ ClientBin/
 *.dbproj.schemaview
 *.pfx
 *.publishsettings
-node_modules/
 orleans.codegen.cs
 
 # Since there are multiple workflows, uncomment next line to ignore bower_components
