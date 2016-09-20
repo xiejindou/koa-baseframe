@@ -1,11 +1,10 @@
 /**
- * Created by calvin on 6/14/16.
+ *  项目配置文件
  */
 "use strict";
 module.exports = {
     "port": 5042,
     "timeout": 10000,
-    "appUrl": "http://mix.localtest.com",
     "postgresDbName": "app_tongj",
     "postgresMinConnections": 1,
     "postgresMaxConnections": 2,
@@ -37,7 +36,6 @@ module.exports = {
         "host":"127.0.0.1",
         "port":27017
     },
-    "indexPath": "/index.html",
     "log": {
         "level": "debug"
     },

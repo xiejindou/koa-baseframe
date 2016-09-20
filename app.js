@@ -1,18 +1,17 @@
 "use strict";
 
 //region require
-var app = require('koa')();
-var koa = require('koa-router')();
-var json = require('koa-json');
-var hbs = require('koa-hbs');
-var session = require('koa-generic-session');
-var redisStore = require('koa-redis');
-var timeout = require('koa-timeout');
-var parser = require('koa-body');
-var serve = require('koa-static');
-var config = require('./config');
-var util = require('./utils');
-var middlewares = require('./middlewares');
+const app = require('koa')();
+const json = require('koa-json');
+const hbs = require('koa-hbs');
+const session = require('koa-generic-session');
+const redisStore = require('koa-redis');
+const timeout = require('koa-timeout');
+const parser = require('koa-body');
+const serve = require('koa-static');
+const config = require('./config');
+const util = require('./utils');
+const middlewares = require('./middlewares');
 const load = require('./utils/load');
 //endregion
 
