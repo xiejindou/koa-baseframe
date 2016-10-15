@@ -6,7 +6,7 @@
 
 ### 用git下载并安装运行  
 - 1.执行命令下载：`git clone -b min git@github.com:muguang-lijing/koa-baseframe.git koa-min-server`
-- 2.进入项目目录安装运行 `npm install && npm start`
+- 2.进入项目目录安装运行 `cd koa-min-server && npm install && npm start`
 - 3.访问 http://127.0.0.1:5042 或者 http://127.0.0.1:5042/hello
 
 ### 结构介绍  
