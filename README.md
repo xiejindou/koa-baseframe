@@ -1,4 +1,4 @@
-# koa-baseframe
+# koa-server
 一个更精简的 koa web 服务
 
 ### 基础环境  
