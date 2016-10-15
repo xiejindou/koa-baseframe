@@ -30,4 +30,4 @@ app.use(json({pretty: true}));
 app.use(router.routes());
 
 app.listen(5042);
-console.log("server run at:5042");
+console.log("访问 http://127.0.0.1:5042/");
