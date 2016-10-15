@@ -1,5 +1,5 @@
 # koa-baseframe
-一个更精简的 koa web 服务
+一个最精简的 koa web 服务
 
 ### 基础环境  
 - node > 4.x.x
