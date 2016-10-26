@@ -14,4 +14,10 @@ router.post('/getTime',function *(){
 	this.body = new Date().toTimeString();
 });
 
+router.get('/sessionTest',function *(){
+	let n = this.session.views || 0;
+	this.session.views = ++n;
+	this.body = `第${n-1}次访问`;
+});
+
 module.exports = router;
