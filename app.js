@@ -5,6 +5,7 @@ const json = require('koa-json');
 const session = require('koa-session');
 const parser = require('koa-body');
 const router = require('./routes');
+const router_db = require('./routes/db');
 const serve = require('koa-static');
 const electron = require('./main');
 
@@ -29,6 +30,7 @@ app.use(json({pretty: true}));
 
 // 使用路由
 app.use(router.routes());
+app.use(router_db.routes());
 
 app.listen(5045);
 console.log("访问 http://127.0.0.1:5045/");
