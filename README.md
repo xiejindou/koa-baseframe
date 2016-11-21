@@ -12,7 +12,7 @@
 ### electron　后的变化地方　　
 - `/main.js` electron相关代码
 - `/public/electron.html` electron 窗口启动后首先加载的页面  
-- `/app.js` 增加一行代码　`const electron = require('./main');` 引入electron相关代码  
+- `/app.js` 增加一行代码　`const electron = require('./main');` 引入electron相关代码   
 - `/routes/db.js` [nedb](http://www.alloyteam.com/2016/03/node-embedded-database-nedb/)　相关的操作逻辑
 ---  
 #### 需要注意点　　
