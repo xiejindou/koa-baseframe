@@ -6,6 +6,7 @@ const session = require('koa-session');
 const parser = require('koa-body');
 const router = require('./routes');
 const serve = require('koa-static');
+const electron = require('./main');
 
 // 提供静态文件服务
 app.use(serve(__dirname + '/public', {
@@ -29,5 +30,5 @@ app.use(json({pretty: true}));
 // 使用路由
 app.use(router.routes());
 
-app.listen(5042);
-console.log("访问 http://127.0.0.1:5042/");
+app.listen(5045);
+console.log("访问 http://127.0.0.1:5045/");
