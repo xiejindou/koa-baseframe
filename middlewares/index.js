@@ -1,8 +1,8 @@
 "use strict";
 
 const bytes = require('bytes');
-const utils = require('../utils');
-const logger = require('../utils/logger');
+const utils = require('../libs/utils');
+const logger = require('../libs/logger');
 const createError = require('http-errors');
 const uuid = require('uuid');
 

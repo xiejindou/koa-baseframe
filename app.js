@@ -4,19 +4,21 @@
 const app = require('koa')();
 const json = require('koa-json');
 const hbs = require('koa-hbs');
-const session = require('koa-generic-session');
-const redisStore = require('koa-redis');
+const session = require('koa-session');
 const timeout = require('koa-timeout');
 const parser = require('koa-body');
 const serve = require('koa-static');
 const config = require('./config');
-const util = require('./utils');
+const util = require('./libs/utils');
 const middlewares = require('./middlewares');
-const load = require('./utils/load');
+const load = require('./libs/load');
 //endregion
 
 // 注意npm-shrinkwrap.json
 app.use(middlewares.requestUuid);
+app.use(middlewares.requestLogger);
+app.use(middlewares.errorHandler);
+
 app.use(serve(__dirname + '/public', {
   setHeaders: function(res) {
     res.setHeader("Access-Control-Allow-Origin", "*");
@@ -25,23 +27,12 @@ app.use(serve(__dirname + '/public', {
   }
 }));
 
-app.use(middlewares.requestLogger);
-app.use(middlewares.errorHandler);
-
 // timeout
 app.use(timeout(config.timeout));
 
-// session
-app.keys = ['koa@2016'];
-app.use(session({
-  store:redisStore({
-    host: config.redisSession.host,
-    port: config.redisSession.port,
-    db: config.redisSession.db,
-    keySchema: config.sessionKey
-  }),
-  key: config.cookieKey
-}));
+// 用于支持session
+app.keys = [config.sessionKey];
+app.use(session(app));
 
 // global middlewares
 util.hbs(hbs);

@@ -5,7 +5,7 @@
 
 var app = require('../app');
 var http = require('http');
-const logger = require('../utils/logger');
+const logger = require('../libs/logger');
 var config = require('../config')
 
 var port = normalizePort(process.env.PORT || config.port || '3000');

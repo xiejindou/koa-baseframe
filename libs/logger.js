@@ -1,7 +1,7 @@
 "use strict";
 
 var bunyan = require('bunyan');
-const utils = require('./');
+const utils = require('./utils');
 const IS_IN_PRODUCTION = utils.isProduction();
 
 var logger = bunyan.createLogger({name: "myapp"});

@@ -1,6 +1,6 @@
 "use strict";
 
-const logger = require('../utils/logger');
+const logger = require('./logger');
 const router = require('koa-router')();
 const path = require('path');
 const fs = require('fs');

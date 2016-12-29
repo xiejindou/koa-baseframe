@@ -5,37 +5,8 @@
 module.exports = {
     "port": 5042,
     "timeout": 10000,
-    "postgresDbName": "app_tongj",
-    "postgresMinConnections": 1,
-    "postgresMaxConnections": 2,
-    "postgresMaxIdleTime": 30000,
-    "postgresMaster": {
-        "host": "127.0.0.1",
-        "port": 5432,
-        "username": "postgres",
-        "password": "postgres"
-    },
-    "postgresSlave": {
-        "host": "127.0.0.1",
-        "port": 5432,
-        "username": "postgres",
-        "password": "postgres"
-    },
-    "redis": {
-        "host": "127.0.0.1",
-        "port": 6379,
-        "db": "8"
-    },
-    "redisSession": {
-        "host":"127.0.0.1",
-        "port":6379,
-        "db":"8"
-    },
-    "mongodb":{
-        "db_name":"student",
-        "host":"127.0.0.1",
-        "port":27017
-    },
+    // "db_uri": "mysql://root:ljmsql118@127.0.0.1:3306/app_fujing_export",
+    "db_uri": "postgres://postgres:postgres@127.0.0.1:5432/export",
     "log": {
         "level": "debug"
     },
