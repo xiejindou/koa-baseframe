@@ -26,3 +26,10 @@ koa工程级项目架构
 
 ### 数据库操作
 - 项目成功运行后，可依次从上往下执行 routes/orders 中的路由进行测试。关于数据库操作具体可参考：[http://itbilu.com/nodejs/npm/N1yrA4HQW.html](http://itbilu.com/nodejs/npm/N1yrA4HQW.html)
+
+### 日志记录与查看  
+- 首先需安装一个命令行工具用于方便查看日志： `npm install -g bunyan`  
+- 启动项目并将日志输出到日志文件 `npm run logStart`  
+- 进到项目根目录，执行命令以查看日志 `tail -200f log.txt | bunyan -L` ，次命令需要linux命令行，window下的linux shell模拟器也可以  
+- 过滤特定等级日志 `tail -200f log.txt | bunyan -l 40` ， 只看level高于40的日志记录  
+- 具体参考：[https://npm.taobao.org/package/bunyan#log-method-api](https://npm.taobao.org/package/bunyan#log-method-api)

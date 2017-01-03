@@ -10,7 +10,7 @@ const Sequelize = require('sequelize');
 const logger = require('../libs/logger').getLogger('db');
 
 const sequelize = new Sequelize(config.db_uri, {
-    dialect: 'mysql', // 或者 'postgres',用于指明所用的数据库类型
+    // dialect: 'mysql', // 或者 'postgres',用于指明所用的数据库类型
     pool: {
         minConnections: 0,
         maxConnections: 5,

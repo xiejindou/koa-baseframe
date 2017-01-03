@@ -83,7 +83,7 @@ router.get('/findcount',function *(){
 router.get('/findfilter',function *(){
     this.body = yield models.order_record.findAll({
         attributes: ['name','tel'],
-        where: { // 查询条件：姓刘的或者金额大于10
+        where: { // 查询条件：姓刘的或者金额大于50
             $or: [
                 {name: { $like: '%刘%' }},
                 {amount: { $gt: 50 }}

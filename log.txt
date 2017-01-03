@@ -1,0 +1,6 @@
+{"name":"myapp","hostname":"lijing-Mint","pid":4276,"level":60,"msg":"big error","time":"2017-01-03T11:24:42.425Z","v":0}
+{"name":"myapp","hostname":"lijing-Mint","pid":4276,"level":30,"msg":"Begin run","time":"2017-01-03T11:24:42.428Z","v":0}
+{"name":"myapp","hostname":"lijing-Mint","pid":4276,"level":50,"msg":"fail to run","time":"2017-01-03T11:24:42.428Z","v":0}
+{"name":"myapp","hostname":"lijing-Mint","pid":4276,"level":40,"msg":"will fail","time":"2017-01-03T11:24:42.428Z","v":0}
+{"name":"黄丽","hostname":"lijing-Mint","pid":4276,"level":30,"age":45,"grade":{"math":23,"chinese":22},"msg":"","time":"2017-01-03T11:24:42.429Z","v":0}
+{"name":"myapp","hostname":"lijing-Mint","pid":4276,"level":30,"msg":"GET /test/log 200 19ms 2B","time":"2017-01-03T11:24:42.434Z","v":0}
