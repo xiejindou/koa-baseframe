@@ -9,10 +9,10 @@ const logger = require('../libs/logger');
  */
 router.get('/insert',function *(){
     yield models.order_record.create({
-        num: '11983',
-        name: '刘琦',
-        tel: '18211654327',
-        amount: 34.4
+        num: '11561',
+        name: '李酒',
+        tel: '1821161298',
+        amount: 34.78
     });
     this.body = {
         err: "",
@@ -25,6 +25,23 @@ router.get('/insert',function *(){
  */
 router.get('/update',function *(){
     yield models.order_record.update({tel: '13787263541'},{where:{name: '刘琦'}});
+    this.body = {
+        err: "",
+        out: "ok"
+    };
+});
+
+/**
+ * 更新一组数据中的一个
+ */
+router.get('/updateone',function *(){
+    let outs = yield models.order_record.findAll();
+    for (let out of outs){
+        if (out.name == "刘琦"){
+            out.name = "刘奇";
+            yield out.save();
+        }
+    }
     this.body = {
         err: "",
         out: "ok"
