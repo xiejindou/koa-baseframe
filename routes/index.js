@@ -1,4 +1,5 @@
 "use strict"
+const util = require('util');
 
 var router = require('koa-router')();
 
@@ -19,6 +20,19 @@ router.get('/jsontest',function *(){
 		name: 'lijing',
 		age: 25
 	};
+});
+
+router.post('/posttest',function *(){
+	// let str = "";
+	// this.req.on('data',thunk=>{
+	// 	str+=thunk;
+	// });
+	// this.req.on('end',()=>{
+	// 	console.log("RequestRawData:"+str);
+	// });
+	console.log("RequestBody:"+JSON.stringify(this.request.body));
+	console.log("RequestBodyType:"+(typeof this.request.body));
+	this.body = "ok";
 });
 
 router.get('/sessionTest',function *(){
