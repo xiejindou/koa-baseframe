@@ -14,6 +14,13 @@ router.post('/getTime',function *(){
 	this.body = new Date().toTimeString();
 });
 
+router.get('/jsontest',function *(){
+	this.body = {
+		name: 'lijing',
+		age: 25
+	};
+});
+
 router.get('/sessionTest',function *(){
 	let n = this.session.views || 0;
 	this.session.views = ++n;
