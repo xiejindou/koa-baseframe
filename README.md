@@ -33,3 +33,10 @@ koa工程级项目架构
 - 进到项目根目录，执行命令以查看日志 `tail -200f log.txt | bunyan -L` ，次命令需要linux命令行，window下的linux shell模拟器也可以  
 - 过滤特定等级日志 `tail -200f log.txt | bunyan -l 40` ， 只看level高于40的日志记录  
 - 具体参考：[https://npm.taobao.org/package/bunyan#log-method-api](https://npm.taobao.org/package/bunyan#log-method-api)
+
+### 接口文档  
+- 接口文档采用 [apidoc](http://apidocjs.com/) 模块根据源码注释自动生成  
+- 安装apidoc命令行工具：`npm install apidoc -g`  
+- 路由接口注释的写法可查阅文档并参考　`testapi/restapi.js`  
+- 同步接口注释到文档：　`npm run syncDoc`　，然后访问　http://127.0.0.1:5042/apidoc 即可查看生成的线上接口文档  
+- 注意：正式使用时需要在package.json里面把文档生成命令的输入选项该为项目的实际路由目录

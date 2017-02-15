@@ -7,6 +7,7 @@
     "start": "node bin/www.js",
     "logStart": "node bin/www.js > log.txt",
     "initDb": "node bin/init_script.js",
+    "syncDoc": "sudo apidoc -i testapi/ -o public/apidoc/",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
