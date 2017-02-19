@@ -2,6 +2,7 @@
 
 const logger = require('./logger');
 const router = require('koa-router')();
+const rindex = require('../routes');
 const path = require('path');
 const fs = require('fs');
 const join = path.resolve;
@@ -14,7 +15,11 @@ module.exports = function(app,root) {
     if(stats.isFile()) {
       let conf = require(dir);
       if (typeof conf.routes === 'function') {
-        router.use('/'+file.slice(0,-3),conf.routes());
+        if (file=="index.js"){
+          router.use(rindex.routes());
+        }else{
+          router.use('/'+file.slice(0,-3),conf.routes());
+        }
         logger.debug('load routes: ' + file);
       }
     }
