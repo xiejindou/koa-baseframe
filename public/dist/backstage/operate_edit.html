@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>编辑推荐</title>
+    <link rel="stylesheet" type="text/css" href="/css/iview.css">
+    <link rel="stylesheet" type="text/css" href="../css/common.css?v=e536d87">
+    <link rel="stylesheet" type="text/css" href="../css/menu.css?v=0c06b59">
+    <script type="text/javascript" src="/js/vue.min.js"></script>
+    <script type="text/javascript" src="/js/iview.min.js"></script>
+    <script type="text/javascript" src="/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/js/vue-resource.min.js"></script>
+    <script type="text/javascript" src="../js/admin_islogin.js?v=e84a69f"></script>
+</head>
+<style>
+    body,
+    html {
+        height: 100%;
+    }
+    
+    #app {
+        height: 100%;
+    }
+    
+    .ivu-menu-item {
+        width: 50%;
+        text-align: center;
+    }
+    
+    iframe {
+        width: 100%;
+        height: 91%;
+        margin-top: 1px;
+        min-height: 440px;
+    }
+    
+    .ivu-table-cell {
+        font-size: 15px;
+    }
+    
+    .paging {
+        float: right;
+        margin-right: 10px;
+        margin-top: 10px;
+    }
+    
+    .ivu-btn-primary {
+        margin: 10px 0 0 10px;
+        width: 100px;
+    }
+    
+    .ivu-table-cell .ivu-btn-primary,
+    .ivu-modal .ivu-btn-primary {
+        margin: 0;
+        width: 70px;
+    }
+    
+    .ivu-upload,
+    .ivu-date-picker {
+        display: inline-block;
+        vertical-align: middle;
+    }
+    
+    label {
+        width: 70px;
+        display: inline-block;
+    }
+    
+    .showAct {
+        display: none;
+    }
+    
+    .ivu-modal-header,
+    .ivu-modal-close {
+        display: none;
+    }
+    
+    .arrow {
+        position: absolute;
+        width: 9px;
+        right: 0;
+        top: 5px;
+    }
+    
+    .cat_show {
+        position: relative;
+        margin-bottom: 25px;
+        width: 100%;
+    }
+    
+    .open_catgoy {
+        font-size: 16px;
+        font-weight: normal;
+        font-style: normal;
+        font-stretch: normal;
+        line-height: normal;
+        letter-spacing: 0.2px;
+        text-align: right;
+        color: #ff5f00;
+        background: none;
+        border: none;
+        position: absolute;
+        right: 15px;
+        top: 2px;
+        cursor: pointer;
+    }
+    
+    .ivu-modal-body {
+        padding: 20px 35px 10px 35px;
+        font-size: 12px;
+        line-height: 1.5;
+    }
+    
+    .ivu-modal-footer {
+        border-top: none;
+        padding: 12px 35px;
+        text-align: right;
+    }
+    
+    .ivu-input {
+        border: none;
+        font-size: 14px;
+        letter-spacing: 0.2px;
+        color: #9b9b9b;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 15px;
+    }
+    
+    .imgbox {
+        width: 40%;
+        display: inline-block;
+        vertical-align: top;
+    }
+    
+    .timebox {
+        width: 59%;
+        display: inline-block;
+    }
+    
+    .ivu-upload-drag {
+        width: 125px;
+        height: 70px;
+        margin-left: 20px;
+        border: none;
+        color: #ff5f00;
+    }
+    
+    .showimg {
+        width: 125px;
+        height: 70px;
+    }
+    
+    .isdashed {
+        border: 1px dashed #ff5f00;
+    }
+    
+    label {
+        font-size: 14px;
+        letter-spacing: 0.2px;
+        color: #9b9b9b;
+    }
+    
+    .uptime .ivu-input,
+    .downtime .ivu-input {
+        padding-bottom: 5px;
+        color: #ff5f00;
+        border-bottom: 1px solid #ff5f00;
+        border-radius: 0;
+    }
+    
+    .uptime,
+    .downtime {
+        margin-top: 5px;
+    }
+    
+    .half {
+        font-size: 0;
+    }
+    
+    .half .ivu-table-wrapper {
+        width: 50%;
+        border: none;
+        display: inline-block;
+        vertical-align: top;
+    }
+    
+    .ivu-table:after {
+        display: none;
+    }
+    
+    .query_box {
+        display: inline-block;
+        border: 1px solid #ff5f00;
+        height: 46px;
+        margin-bottom: 15px;
+    }
+    
+    .first {
+        margin: 20px;
+    }
+    
+    .usename {
+        height: 100%;
+        padding-left: 10px;
+        font-size: 15px;
+        letter-spacing: 0.1px;
+        color: #9b9b9b;
+        background-color: #fbfbfb;
+        width: 270px;
+    }
+    
+    .add {
+        height: 100%;
+        background: #fff;
+        color: #ff5f00;
+        font-size: 16px;
+        letter-spacing: 0.1px;
+        text-align: center;
+        width: 86px;
+        vertical-align: top;
+    }
+    
+    .query {
+        height: 46px;
+        background: #ff5f00;
+        color: #fff;
+        font-size: 16px;
+        letter-spacing: 0.1px;
+        text-align: center;
+        width: 90px;
+        margin: 10px 20px;
+    }
+    
+    .u_url {
+        width: 53px;
+        height: 53px;
+        border-radius: 50%;
+        vertical-align: middle;
+    }
+    
+    .u_name {
+        font-size: 16px;
+        letter-spacing: 0.1px;
+        text-align: center;
+        color: #666666;
+        display: inline-block;
+    }
+    
+    .catgoy ul li {
+        width: 15%;
+        display: inline-block;
+        text-align: center;
+        height: 30px;
+        margin-top: 20px;
+        margin-left: 4px;
+        cursor: pointer;
+    }
+    
+    .catgoy ul li:hover {
+        background: #ff5f00;
+        border-radius: 6px;
+    }
+    
+    .catgoy .act {
+        background: #ff5f00;
+        border-radius: 6px;
+    }
+    
+    .catgoy .act p {
+        color: #fff !important;
+    }
+    
+    .catgoy ul li p:hover {
+        color: #fff !important;
+    }
+    
+    .catgoy ul li p {
+        font-size: 14px;
+        font-weight: normal;
+        font-style: normal;
+        font-stretch: normal;
+        line-height: normal;
+        letter-spacing: 0.2px;
+        color: #ff5f00;
+        line-height: 30px;
+    }
+    
+    .ivu-modal-footer {
+        display: none;
+    }
+    
+    .btn_list {
+        text-align: right;
+    }
+    
+    .keep {
+        width: 67px;
+        height: 32px;
+        color: #fff;
+        background: #ff5f00;
+        text-align: center;
+        margin-top: 20px;
+        margin-left: 20px;
+    }
+    
+    .cancel {
+        width: 67px;
+        height: 32px;
+        color: #ff5f00;
+        text-align: center;
+    }
+    
+    .confim {
+        background-color: #ff5f00;
+        border: 1px solid #ff5f00;
+        padding: 6px 17px;
+        color: #fff;
+        border-radius: 0px !important;
+        box-shadow: 0 2px 4px 0 rgba(255, 95, 0, 0.16);
+    }
+    
+    .pop {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        top: 0;
+        left: 0;
+        z-index: 9;
+        display: none;
+        overflow: scroll;
+    }
+    
+    .search {
+        z-index: 10;
+        width: 70%;
+        margin: 80px auto;
+        background: #fff;
+        padding: 20px 20px 55px;
+    }
+    
+    .display {
+        display: block !important;
+    }
+    .hidden{
+        overflow: hidden
+    }
+    .order_num {
+        font-size: 16px;
+        width: 60px;
+        border-bottom: 1px solid #ff5f00;
+        letter-spacing: 0.2px;
+        color: #ff5f00;
+        text-align: center;
+    }
+    
+</style>
+
+<body>
+    <div id="app">
+        <div class="row_left">
+            <iframe src="back_menu.html" class="menu_frame"></iframe>
+        </div>
+        <div class="row_right">
+            <div class="nav">
+                <ul>
+                    <li>
+                        <a href="operate_special.html">
+                            <p>专题推荐</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="operate_banner.html">
+                            <p>首页banner</p>
+                        </a>
+                    </li>
+                    <li class="navli_active">
+                        <a href="operate_edit.html">
+                            <p>编辑推荐</p>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="wrapper">
+                <mytable :datalist="message"></mytable>
+            </div>
+        </div>
+    </div>
+    <template id="main">
+        <div class="half">
+            <i-table border :row-class-name="rowClassName" :columns="columns1" :data="data1"></i-table>
+            <i-table border :row-class-name="rowClassName" :columns="columns1" :data="data2"></i-table>
+        </div>
+        <Page :total="total" :page-size="20" show-elevator @on-change="pagechange" class="paging"></Page>
+        <!--<div class="query_box first">
+            <input class="usename" type="text" placeholder="填写用户名" v-model="username">
+            <button class="add" @click="add">添加</button>
+        </div>-->
+        <button class="query" @click="query">搜索</button>
+        <Modal :visible.sync="modal" title="编辑" width="600" ok-text="确认" :style="{top: '150px'}" @on-ok="keep" @on-cancel="cancel">
+            <div class="catgoy">
+                <ul>
+                    <li class="catgoylist" v-for="catgoy in catgoylist" @click="catlist(catgoy.vuale,$index)">
+                        <p>{{catgoy.label}}</p>
+                    </li>
+                </ul>
+            </div>
+            <div class="btn_list">
+                <button class="cancel" @click="cancel">取消</button>
+                <button class="keep" @click="keep">确认</button>
+            </div>
+        </Modal>
+        <div class="pop" v-bind:class="{ display: modal1 }" @click="pop">
+            <div class="search" @click="focus">
+                <div class="query_box">
+                    <input class="usename" type="text" placeholder="填写技能名或用户名" v-model="text">
+                    <button class="add" @click="query_user">搜达人</button>
+                    <button class="add" @click="query_skill">搜技能</button>
+                </div>
+                <i-table border :row-class-name="rowClassName" :columns="columns3" :data="data3"></i-table>
+                <Page :total="total1" :page-size="10" show-elevator @on-change="pagechange1" class="paging"></Page>
+            </div>
+        </div>
+    </template>
+    <script src="/js/format.js"></script>
+    <script>
+        // var data = ;
+        var c_list = [];
+        var myvm = Vue.component('mytable', {
+            template: '#main',
+            data: function () {
+                return {
+                    modal: false,
+                    modal1: false,
+                    mydata: '12',
+                    data1: [],
+                    data2: [],
+                    data3: [],
+                    total: 20,
+                    total1: 20,
+                    isActive: true,
+                    isActive1: false,
+                    id: 0,
+                    type: false,
+                    sp_name: '',
+                    category: '',
+                    url: '',
+                    uptime: '',
+                    downtime: '',
+                    imgurl: '',
+                    catgoyname: '选择分类',
+                    text: '',
+                    columns1: [{
+                        title: '序号',
+                        key: 'index',
+                        align: 'center',
+                        render(row, column, index) {
+                            return `<p>${index + 1}</p>`;
+                        }
+                    }, {
+                        title: '用户名',
+                        key: 'user_name',
+                        align: 'center',
+                    }, {
+                        title: '分类',
+                        align: 'center',
+                        key: 'categorys',
+                        render(row, column, index) {
+                            var idlist = row.categorys;
+                            var p = '';
+                            $.each(c_list, function (index, val) {
+                                var v = val;
+                                $.each(idlist, function (index, val) {
+                                    if (v.value == val) {
+                                        p = p + v.label + ","
+                                    }
+                                })
+                            })
+                            if (p.length > 15) {
+                                p = p.substring(0, 12) + "....";
+                            }
+                            p = p.substring(0, p.length - 1);
+                            return `<p class="category_p">` + p + `</p>`;
+                        }
+                    }, {
+                        title: '排序',
+                        align: 'center',
+                        key: 'order',
+                        render(row, column, index) {
+                            var id = row.user_id;
+                            return `<input type="text" v-model=` + row.order + ` class="order_num" @click="onfocus('${id}')"/>`;
+                        }
+                    }, {
+                        title: '操作',
+                        key: 'action',
+                        align: 'center',
+                        render(row, column, index) {
+                            var id = row.user_id;
+                            var ret = `<button @click="remove('${id}')" class="confim">删除</button>`;
+                            return ret;
+                            // return '<button class="confim" @click="remove(' + row.user_id + ')">删除</button>';
+                        }
+                    }],
+                    columns3: [{
+                        title: '技能名称',
+                        key: 'title',
+                        width:'400'
+                    }, {
+                        title: '分类',
+                        key: 'category',
+                        align: 'center',
+                        width:'120',
+                        render(row, column, index) {
+                            var id = row.category;
+                            var p = '';
+                            $.each(c_list, function (index, val) {
+                                if (id == val.value) {
+                                    p = val.label;
+                                }
+                            })
+                            return `<p>` + p + `</p>`;
+                        }
+                    }, {
+                        title: '作者',
+                        align: 'center',
+                        key: 'usr_name',
+                    }, {
+                        title: '发布时间',
+                        align: 'center',
+                        key: 'publish_time',
+                        render(row, column, index) {
+                            var time = new Date(parseInt(row.publish_time) * 1000).Format("yyyy-MM-dd");
+                            return `<p>` + time + `</p>`;
+                        }
+                    }, {
+                        title: '操作',
+                        key: 'action',
+                        align: 'center',
+                        render(row, column, index) {
+                            return `<button @click="add(${index})" class="confim">添加</button>`;
+                        }
+                    }],
+                    catgoylist: [],
+                    userurl: '/img/timg.jpg',
+                    username: '',
+                    isuser: false,
+                    idlist: [],
+                    add_id: ''
+                }
+            },
+            methods: {
+                rowClassName: function (row, index) {
+                    var num = index % 2;
+                    if (num == 0) {
+                        return 'single';
+                    } else if (num == 1) {
+                        return 'double';
+                    }
+                },
+                catlist: function (id, index) {
+                    this.catgoyname = name;
+                    var cid = this.catgoylist[index].value;
+                    var haclass = $($(".catgoylist")[index]).hasClass('act');
+                    if (haclass) {
+                        $($(".catgoylist")[index]).removeClass('act');
+                        for (i = 0; i <= this.idlist.length; i++) {
+                            if (cid == this.idlist[i]) {
+                                if (i == 0) {
+                                    this.idlist.shift();
+                                } else {
+                                    this.idlist.splice(i, 1)
+                                }
+
+                            }
+                        }
+                    } else {
+                        $($(".catgoylist")[index]).addClass('act');
+                        this.idlist.push(cid);
+                    }
+                },
+                onfocus: function (id, index) {
+                    var self = this;
+                    console.log(id)
+                    document.onkeydown = function (event) {
+                        var e = event || window.event || arguments.callee.caller.arguments[0];
+                        if (event.keyCode == 13) { // 回车键  
+                            var order = $(event.path[0]).val();
+                            self.$http.post("/xadmin/set_referuser", { uid: id, order: order }).then(res => {
+                                var data = res.body;
+                                if (data.out.status != null) {
+                                    self.$Message.success('更换成功');
+                                    self.ajaxdata(0)
+                                }
+                            })
+                        }
+                    };
+                },
+                //分页获取页数
+                pagechange: function (page) {
+                    this.ajaxdata(page);
+                },
+                pagechange1: function (page) {
+                    this.ajaxquery(page - 1);
+                },
+                ajaxquery: function (page) {
+                    var t = this.text;
+                    var type = 'skill';
+                    if (this.isuser) {
+                        type = "user";
+                    } else {
+                        type = 'skill';
+                    }
+                    this.$http.get('/xadmin/find_skills?text=' + t + '&type=' + type + '&page=' + page + '&len=0').then(res => {
+                        var data = res.body;
+                        if (data.err == "") {
+                            this.data3 = data.out.datas;
+                            this.total1 = JSON.parse(data.out.count);
+                        } else {
+                            this.$Message.error(data.err);
+                        }
+                    })
+                },
+                //加载分页数据
+                ajaxdata: function (page) {
+                    var page1 = page;
+                    if (page == 1) {
+                        page = page - 1;
+                    } else {
+                        page1 = page + 1;
+                    }
+                    this.$http.get("/xadmin/get_referuser?page=" + page1 + "&len=10").then(res => {
+                        var data = res.body;
+                        if (data.err == "") {
+                            if (data.out.datas.length == 0) {
+
+                            } else {
+
+                                this.data2 = data.out.datas;
+                            }
+                            this.total = data.out.count;
+                        } else {
+                            this.$Message.error(data.err);
+                        }
+                    })
+                    this.$http.get("/xadmin/get_referuser?page=" + page + "&len=10").then(res => {
+                        var data = res.body;
+                        if (data.err == "") {
+                            this.data1 = data.out.datas;
+                        } else {
+                            this.$Message.error(data.err);
+                        }
+                    })
+                },
+                //点击删除
+                remove: function (id) {
+                    var r = confirm("确认要删除吗？");
+                    if (r != true) {
+                        return;
+                    }
+                    this.$http.post("/xadmin/del_referuser", { uid: id }).then(res => {
+                        var data = res.body;
+                        if (data.err == "") {
+                            this.$Message.success('删除成功');
+                            setTimeout(function () {
+                                window.location.reload();
+                            }, 1000);
+                        } else {
+                            this.$Message.error(data.err);
+                        }
+                    })
+                },
+                //对话框取消事件
+                cancel: function () {
+                    $(".catgoylist").removeClass('act');
+                    this.idlist = [];
+                    this.modal = false;
+                },
+                //新建保存and编辑保存
+                keep: function () {
+                    var data = {
+                        uid: this.add_id,
+                        categorys: this.idlist
+                    }
+                    this.$http.post("/xadmin/add_referuser", data).then(res => {
+                        var data = res.body;
+                        if (data.err == "") {
+                            this.$Message.success('添加成功');
+                            this.modal = false;
+                            this.ajaxdata(0)
+                        } else {
+                            this.$Message.error(data.err);
+                        }
+                    })
+                },
+                pop: function () {
+                    this.modal1 = false;
+                    this.text = "";
+                    this.data3 = [];
+                    $("body").removeClass("hidden");
+                },
+                focus: function (ev) {
+                    ev.cancelBubble = true;
+                },
+                add: function (index) {
+                    // this.modal1 = false;
+                    this.modal = true;
+                    this.add_id = this.data3[index].uid;
+                },
+                query: function () {
+                    this.modal1 = true;
+                    $("body").addClass("hidden");
+                },
+                query_user: function () {
+                    this.isuser = true;
+                    this.ajaxquery(0);
+                },
+                query_skill: function () {
+                    this.isuser = false;
+                    this.ajaxquery(0);
+                }
+            },
+            ready() {
+                this.$Message.config({
+                    top: 310,
+                    duration: 3
+                });
+                //获取所有分类
+                this.$http.get("/other/get_categorylist").then(res => {
+                    var data = res.body;
+                    var categorylist = [];
+                    if (data.err == "") {
+                        data.out.datas.forEach(function (val) {
+                            var category = {
+                                value: val.id,
+                                label: val.name
+                            }
+                            categorylist.push(category);
+                        })
+                        c_list = this.catgoylist = categorylist;
+                    }
+                })
+                var self = this;
+                //获取第一页数据
+                this.ajaxdata(1);
+            }
+        })
+        var app = new Vue({
+            el: "#app"
+        })
+    </script>
+</body>
+
+</html>

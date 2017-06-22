@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>专题页面</title>
+    <link rel="stylesheet" type="text/css" href="/css/iview.css">
+    <link rel="stylesheet" type="text/css" href="../css/common.css?v=e536d87">
+    <link rel="stylesheet" type="text/css" href="../css/menu.css?v=0c06b59">
+    <script type="text/javascript" src="/js/vue.min.js"></script>
+    <script type="text/javascript" src="/js/iview.min.js"></script>
+    <script type="text/javascript" src="/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/js/vue-resource.min.js"></script>
+    <script type="text/javascript" src="../js/admin_islogin.js?v=e84a69f"></script>
+</head>
+<style>
+    body,
+    html {
+        height: 100%;
+    }
+    
+    #app {
+        height: 100%;
+    }
+    
+    .ivu-menu-item {
+        width: 50%;
+        text-align: center;
+    }
+    
+    iframe {
+        width: 100%;
+        height: 91%;
+        margin-top: 1px;
+        min-height: 440px;
+    }
+    
+    .ivu-table-cell {
+        font-size: 15px;
+    }
+    
+    .paging {
+        float: right;
+        margin-right: 10px;
+        margin-top: 10px;
+    }
+    
+    .ivu-btn-primary {
+        margin: 10px 0 0 10px;
+        width: 100px;
+    }
+    
+    .ivu-table-cell .ivu-btn-primary,
+    .ivu-modal .ivu-btn-primary {
+        margin: 0;
+        width: 70px;
+    }
+    
+    .ivu-upload,
+    .ivu-date-picker {
+        display: inline-block;
+        vertical-align: middle;
+    }
+    
+    label {
+        width: 70px;
+        display: inline-block;
+    }
+    
+    .showAct {
+        display: none;
+    }
+    
+    .ivu-modal-header,
+    .ivu-modal-close {
+        display: none;
+    }
+    
+    .arrow {
+        position: absolute;
+        width: 9px;
+        right: 0;
+        top: 5px;
+    }
+    
+    .cat_show {
+        position: relative;
+        margin-bottom: 25px;
+        width: 100%;
+    }
+    
+    .open_catgoy {
+        font-size: 16px;
+        font-weight: normal;
+        font-style: normal;
+        font-stretch: normal;
+        line-height: normal;
+        varter-spacing: 0.2px;
+        text-align: right;
+        color: #ff5f00;
+        background: none;
+        border: none;
+        position: absolute;
+        right: 15px;
+        top: 2px;
+        cursor: pointer;
+    }
+    
+    .ivu-modal-body {
+        padding: 40px 35px 10px 35px;
+        font-size: 12px;
+        line-height: 1.5;
+    }
+    
+    .ivu-modal-footer {
+        border-top: none;
+        padding: 12px 35px;
+        text-align: right;
+    }
+    
+    .ivu-input {
+        border: none;
+        font-size: 14px;
+        varter-spacing: 0.2px;
+        color: #9b9b9b;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 15px;
+    }
+    
+    .imgbox {
+        width: 40%;
+        display: inline-block;
+        vertical-align: top;
+    }
+    
+    .timebox {
+        width: 59%;
+        display: inline-block;
+    }
+    
+    .ivu-upload-drag {
+        width: 125px;
+        height: 70px;
+        margin-left: 20px;
+        border: none;
+        color: #ff5f00;
+    }
+    
+    .showimg {
+        width: 125px;
+        height: 70px;
+    }
+    
+    .isdashed {
+        border: 1px dashed #ff5f00;
+    }
+    
+    label {
+        font-size: 14px;
+        varter-spacing: 0.2px;
+        color: #9b9b9b;
+    }
+    
+    .uptime .ivu-input,
+    .downtime .ivu-input {
+        padding-bottom: 5px;
+        color: #ff5f00;
+        border-bottom: 1px solid #ff5f00;
+        border-radius: 0;
+    }
+    
+    .uptime,
+    .downtime {
+        margin-top: 5px;
+    }
+    
+    .catgoy {
+        position: absolute;
+        width: 90%;
+        top: 25px;
+        left: 20px;
+        background: #fff;
+        z-index: 999;
+    }
+    
+    .catgoy p {
+        font-size: 16px;
+        font-weight: normal;
+        font-style: normal;
+        font-stretch: normal;
+        line-height: normal;
+        varter-spacing: 0.2px;
+        color: #666666;
+    }
+    
+    .catgoy ul li {
+        width: 15%;
+        display: inline-block;
+        text-align: center;
+        height: 30px;
+        margin-top: 6px;
+        margin-left: 4px;
+        cursor: pointer;
+    }
+    
+    .catgoy ul li:hover {
+        background: #ff5f00;
+        border-radius: 6px;
+    }
+    
+    .catgoy .act {
+        background: #ff5f00;
+        border-radius: 6px;
+    }
+    
+    .act p {
+        color: #fff !important;
+    }
+    
+    .catgoy ul li p:hover {
+        color: #fff !important;
+    }
+    
+    .catgoy ul li p {
+        font-size: 14px;
+        font-weight: normal;
+        font-style: normal;
+        font-stretch: normal;
+        line-height: normal;
+        varter-spacing: 0.2px;
+        color: #ff5f00;
+        line-height: 30px;
+    }
+    
+    .catgoy_in {
+        font-size: 14px;
+        font-weight: normal;
+        font-style: normal;
+        font-stretch: normal;
+        line-height: normal;
+        varter-spacing: 0.3px;
+        text-align: center;
+        color: #ffffff;
+        background: #ff5f00;
+        border: none;
+        width: 67px;
+        height: 32px;
+        border-radius: 100px;
+        float: right;
+    }
+    
+    .ivu-modal-content {
+        border-radius: 0;
+        width: 600px;
+    }
+</style>
+
+<body>
+    <div id="app">
+        <div class="row_left">
+            <iframe src="back_menu.html" class="menu_frame"></iframe>
+        </div>
+        <div class="row_right">
+            <div class="nav">
+                <ul>
+                    <li class="navli_active">
+                        <a href="operate_special.html">
+                            <p>专题推荐</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="operate_banner.html">
+                            <p>首页banner</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="operate_edit.html">
+                            <p>编辑推荐</p>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="wrapper">
+                <mytable :datalist="message"></mytable>
+            </div>
+        </div>
+    </div>
+    <template id="main">
+        <i-table border :columns="columns1" :data="data1" :row-class-name="rowClassName"></i-table>
+        <Page :total="total" :page-size="10" show-elevator @on-change="pagechange" class="paging"></Page>
+        <i-button type="primary" long="20%" @click="add">新建</i-button>
+        <Modal :visible.sync="modal" title="编辑" width="600" ok-text="保存" :style="{top: '100px'}" :mask-closable="false" @on-ok="keep"
+            @on-cancel="cancel">
+            <div class="cat_show">
+                <i-input :value.sync="sp_name" placeholder="请输入专题名" style="width: 450px"></i-input>
+                <button class="open_catgoy" @click="show" v-html="catgoyname" v-bind:class="{ ok_catgoy: ok_catgoy }"></button>
+                <img src="/img/arrow.png" class="arrow" />
+            </div>
+            <div class="catgoy" v-if="showcatgoy == true" v-bind:class="{ display: showcatgoy }">
+                <p>请为技能选择一个分类</p>
+                <ul>
+                    <li class="catgoylist" v-for="catgoy in catgoylist" @click="catlist(catgoy.name,catgoy.id,$index)">
+                        <p>{{catgoy.name}}</p>
+                    </li>
+                </ul>
+                <button class="catgoy_in" @click="catgoy_in">确认</button>
+            </div>
+            <div class="cat_show">
+                <i-input :value.sync="url" placeholder="请输入链接地址" style="width: 450px"></i-input>
+            </div>
+            <div class="imgbox">
+                <Upload v-ref:upload :on-success="onurl" :format="['jpg','jpeg','png']" :max-size="2048" :show-upload-list="false" multiple
+                    type="drag" name="pic" action="/other/upload_img">
+                    <div v-bind:class="{ isdashed: isActive }" style="height: 70px;">
+                        <p v-bind:class="{ showAct: isActive1 }" style="margin-top:15px;">+</p>
+                        <p v-bind:class="{ showAct: isActive1 }">上传缩略图</p>
+                        <img v-bind:src=imgurl class="showimg" v-bind:class="{ showAct: isActive }">
+                    </div>
+                </Upload>
+                <p style="color: #fd511f;font-size: 12px;margin:10px 0 0 20px;">缩略图尺寸250X140</p>
+            </div>
+            <div class="timebox">
+                <div class="uptime">
+                    <label>上线时间:</label>
+                    <Date-picker type="datetime" placeholder="选择日期和时间" format="yyyy-MM-dd HH:mm" :value.sync="uptime" style="width: 200px"></Date-picker>
+                </div>
+                <div class="downtime">
+                    <label>下线时间:</label>
+                    <Date-picker type="datetime" placeholder="选择日期和时间" format="yyyy-MM-dd HH:mm" :value.sync="downtime" style="width: 200px"></Date-picker>
+                </div>
+            </div>
+        </Modal>
+    </template>
+    <script>
+        var myvm = Vue.component('mytable', {
+            template: '#main',
+            data: function () {
+                return {
+                    modal: false,
+                    mydata: '12',
+                    data1: [],
+                    total: 20,
+                    isActive: true,
+                    isActive1: false,
+                    id: 0,
+                    type: false,
+                    sp_name: '',
+                    category: '',
+                    url: '',
+                    uptime: '',
+                    downtime: '',
+                    catgoyname: '选择分类', //分类名字
+                    catgoylist: [],
+                    showcatgoy: false,
+                    imgurl: '',
+                    columns1: [{
+                        title: '专题名称',
+                        key: 'name',
+                        align: 'center'
+                    }, {
+                        title: '分类',
+                        key: 'category_name',
+                        align: 'center',
+                        width: 160
+                    }, {
+                        title: '上线时间',
+                        key: 'start_time',
+                        sortable: true
+                    }, {
+                        title: '下线时间',
+                        key: 'end_time',
+                        sortable: true
+                    }, {
+                        title: '状态',
+                        key: 'status',
+                        align: 'center',
+                        width: 140,
+                        render(row, column, index) {
+                            console.log(row.status);
+                            var html = '';
+                            if(row.status == "上线"){
+                                html = `<p style="color:#7ed321">${row.status}</p>`
+                            }else{
+                                html = `<p>${row.status}</p>`
+                            }
+                            return html;
+                        }
+                    }, {
+                        title: '操作',
+                        key: 'action',
+                        align: 'center',
+                        width: 160,
+                        render(row, column, index) {
+                            console.log(row);
+                            return `<i-button type="primary" size="small" @click="edit(${index})">编辑</i-button>`;
+                        }
+                    }],
+                    categorylist: []
+                }
+            },
+            methods: {
+                rowClassName(row, index) {
+                    var num = index % 2;
+                    if (num == 0) {
+                        return 'single';
+                    } else if (num == 1) {
+                        return 'double';
+                    }
+                },
+                //分页获取页数
+                pagechange(page) {
+                    this.ajaxdata(page);
+                },
+                //加载分页数据
+                ajaxdata(page) {
+                    page = page - 1;
+                    console.log(page);
+                    this.$http.get("/xadmin/getsubjects?page=" + page + "&len=10").then(res => {
+                        var data = res.body;
+                        if (data.err == "") {
+                            this.data1 = data.out.datas;
+                            this.total = data.out.count;
+                        } else {
+                            this.$Message.error(data.error);
+                        }
+                    })
+                },
+                catlist: function (name, id, index) {
+                    this.catgoyname = name;
+                    this.catgoyid = id;
+                    $(".catgoylist").removeClass('act');
+                    $($(".catgoylist")[index]).addClass('act');
+                },
+                show: function () {
+                    if (this.showcatgoy) {
+                        this.showcatgoy = false;
+                    } else {
+                        this.showcatgoy = true;
+                    }
+                },
+                catgoy_in: function () {
+                    this.showcatgoy = false;
+                    this.ok_catgoy = true;
+                },
+                //点击编辑
+                edit(index) {
+                    this.type = false;
+                    this.modal = true;
+                    this.isActive = false;
+                    this.isActive1 = true;
+                    var category = this.data1[index];
+                    console.log(category);
+                    this.catgoyname = category.category_name;
+                    this.sp_name = category.name;
+                    this.id = category.id;
+                    this.imgurl = category.title_url;
+                    this.downtime = category.end_time;
+                    this.uptime = category.start_time;
+                    this.url = category.content_url;
+                    this.category = category.category;
+                },
+                //对话框取消事件
+                cancel() {
+                    this.isActive = true;
+                    this.isActive1 = false;
+                    this.imgurl = '';
+                    this.url = '';
+                    this.sp_name = "";
+                    this.downtime = "";
+                    this.uptime = "";
+                    this.category = "";
+                },
+                //新建保存and编辑保存
+                keep() {
+                    var name = this.sp_name; //名称
+                    var url = this.url;  //链接
+                    var imgurl = this.imgurl;  //图片链接
+                    var category = this.catgoyid;  //分类
+                    console.log(this.uptime)
+                    var uptime = Date.parse(this.uptime) / 1000;  //上线时间
+                    var downtime = Date.parse(this.downtime) / 1000;  //下线时间
+                    var postlist = {
+                        id: this.id,
+                        name: name,
+                        category: category,
+                        content_url: url,
+                        title_url: imgurl,
+                        start_time: uptime,
+                        end_time: downtime
+                    };
+                    if (this.type) {//true为新建，false为编辑
+                        if (name != null || url != null || imgurl != null || category != null || uptime != null || downtime != null) {
+                            this.$http.post("/xadmin/addsubject", postlist).then(res => {
+                                var data = res.body;
+                                if (data.err == null) {
+                                    this.$Message.success('添加成功');
+                                    window.location.reload();
+                                }
+                            })
+                        } else {
+                            this.$Message.error("有信息未填写完整");
+                        }
+                    } else {
+                        this.$http.post("/xadmin/setsubject", postlist).then(res => {
+                            var data = res.body;
+                            if (data.out.status != null) {
+                                this.$Message.success('修改成功');
+                                window.location.reload();
+                            }
+                        })
+                    }
+                },
+                //获取上传图片路径
+                onurl(response, file, fileList) {
+                    if (response.err == "") {
+                        this.imgurl = response.out.url;
+                        this.isActive1 = true;
+                        this.isActive = false;
+                        this.$Message.success('更换成功');
+                    }
+                },
+                add() {
+                    this.type = true;
+                    this.modal = true;
+                }
+            },
+            ready() {
+                var self = this;
+                //获取第一页数据
+                this.ajaxdata(1);
+                //获取所有分类
+                this.$http.get("/other/get_categorylist").then(res => {
+                    var data = res.body;
+                    var categorylist = [];
+                    if (data.err == "") {
+                        data.out.datas.forEach(function (val) {
+                            var category = {
+                                value: val.id,
+                                label: val.name
+                            }
+                            categorylist.push(category);
+                        })
+                        this.categorylist = categorylist;
+                    } else {
+
+                    }
+                })
+                this.$http.get("/other/get_categorylist").then(res => {
+                    var data = res.body.out;
+                    if (res.body.err == "") {
+                        self.catgoylist = data.datas;
+                    }
+                })
+            }
+        })
+        var app = new Vue({
+            el: "#app"
+        })
+    </script>
+</body>
+
+</html>

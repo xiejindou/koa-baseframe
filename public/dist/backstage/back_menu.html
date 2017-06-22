@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>后台管理系统</title>
+    <link rel="stylesheet" type="text/css" href="/css/iview.css">
+    <link rel="stylesheet" type="text/css" href="../css/common.css?v=e536d87">
+    <link rel="stylesheet" type="text/css" href="../css/menu.css?v=0c06b59">
+    <script type="text/javascript" src="/js/vue.min.js"></script>
+    <script type="text/javascript" src="/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/js/iview.min.js"></script>
+    <script type="text/javascript" src="/js/vue-resource.min.js"></script>
+    <script type="text/javascript" src="../js/admin_islogin.js?v=e84a69f"></script>
+    <style>
+        #menu{
+            width: 100%;
+            height: 100%;
+            background: #fff;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="menu">
+        <div class="head">
+            <img src="/img/admin_url.png" class="admin_url" />
+            <p class="admin_name" v-html="name">神经</p>
+            <img src="/img/out.png" class="out" @click="out" />
+            <p class="admin_identity" v-html="role">超级管理员</p>
+        </div>
+        <div class="menu">
+            <ul class="list">
+                <li v-for="menu in list" @click="on(menu.url)">
+                    <a>
+                        <img v-bind:src=menu.img>
+                        <p>{{menu.title}}</p>
+                    </a>
+                </li>
+            </ul>
+            <div class="copy">
+                <p>©Copy right by <br/> 深圳善链科技有限公司</p>
+            </div>
+        </div>
+    </div>
+    <script>
+        var app = new Vue({
+            el: '#menu',
+            data: {
+                name: '',
+                role: '',
+                list: [
+                    {
+                        name: 'pic',
+                        title: '数据统计',
+                        url: 'index.html',
+                        img: '/img/data.png'
+                    },
+                    {
+                        name: 'skill',
+                        title: '审核',
+                        url: 'audit_skill.html',
+                        img: '/img/examine.png'
+                    },
+                    {
+                        name: 'money',
+                        title: '运营管理',
+                        url: 'operate_special.html',
+                        img: '/img/operate.png'
+                    },
+                    {
+                        name: 'money',
+                        title: '财务流水',
+                        url: 'finance.html',
+                        img: '/img/finance.png'
+                    }
+                ]
+            },
+            methods: {
+                on:function(url) {
+                    parent.window.location.href = url;
+                },
+                out: function () {
+                    var logout = confirm("确定退出？");
+                    if (logout) {
+                        this.$http.post("/xadmin/logout").then(res => {
+                            var data = res.body;
+                            if (data.err == "") {
+                                this.$Message.error('已退出');
+                                setTimeout(function () {                         
+                                    parent.window.location.href = "login.html";
+                                }, 1000);
+                            } else {
+                                this.$Message.error(data.error);
+                            }
+                        });
+                    }
+                },
+                power:function(role){
+                    
+                }
+            },
+            ready: function () {
+                this.$http.get("/xadmin/info").then(res => {
+                    var data = res.body.out;
+                    this.role = data.role;
+                    this.name = data.name;
+                })
+                var url = parent.window.location.href;
+                if (url.indexOf("index") > 0) {
+                    $($(".list li")[0]).addClass("act");
+                    this.list[0].img = "/img/data_1.png";
+                } else if (url.indexOf("audit") > 0) {
+                    $($(".list li")[1]).addClass("act");
+                    this.list[1].img = "/img/examine_1.png";
+                }else if (url.indexOf("operate") > 0) {
+                    $($(".list li")[2]).addClass("act");
+                    this.list[2].img = "/img/operate_1.png";
+                }else if (url.indexOf("finance") > 0) {
+                    $($(".list li")[3]).addClass("act");
+                    this.list[3].img = "/img/finance_1.png";
+                }
+            }
+        })
+
+    </script>
+
+</body>
+
+</html>

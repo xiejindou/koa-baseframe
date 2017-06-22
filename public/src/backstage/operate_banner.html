@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>banner页面</title>
+    <link rel="stylesheet" type="text/css" href="/css/iview.css">
+    <link rel="stylesheet" type="text/css" href="../css/common.css">
+    <link rel="stylesheet" type="text/css" href="../css/menu.css">
+    <script type="text/javascript" src="/js/vue.min.js"></script>
+    <script type="text/javascript" src="/js/iview.min.js"></script>
+    <script type="text/javascript" src="/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/js/vue-resource.min.js"></script>
+    <script type="text/javascript" src="../js/admin_islogin.js"></script>
+</head>
+<style>
+    body,
+    html {
+        height: 100%;
+    }
+    
+    #app {
+        height: 100%;
+    }
+    
+    #list {
+        padding-top: 10px;
+    }
+    
+    .bannlist {
+        height: 135px;
+        position: relative;
+        margin-top: 10px;
+    }
+    
+    .showimg {
+        width: 200px;
+        height: 91px;
+        vertical-align: middle;
+    }
+    
+    .up {
+        width: 30px;
+        height: 30px;
+        background: none;
+        position: absolute;
+        top: 25px;
+        left: 30px;
+        background: url(/img/top.png) no-repeat center;
+        background-size: cover;
+    }
+    
+    .down {
+        width: 30px;
+        height: 30px;
+        background: none;
+        position: absolute;
+        top: 60px;
+        left: 30px;
+        background: url(/img/bottom.png) no-repeat center;
+        background-size: cover;
+    }
+    
+    .close {
+        position: absolute;
+        width: 50px;
+        left: 280px;
+        z-index: 2;
+        top: -15px;
+        cursor: pointer;
+    }
+    
+    .right {
+        padding-left: 30px;
+        display: inline-block;
+        vertical-align: middle;
+        position: relative;
+    }
+    
+    #list li label {
+        font-size: 20px;
+        font-weight: 600;
+        margin-top: 20px;
+    }
+    
+    .url {
+        width: 250px;
+        font-size: 13px;
+        display: block;
+        margin-top: 10px;
+        background-color: #fafafa;
+        box-shadow: 0 2px 4px 0 rgba(255, 95, 0, 0.16);
+        border: solid 1px #ff5f00;
+        padding: 13px 10px;
+    }
+    .type{
+        width: 100px;
+        font-size: 13px;
+        display: block;
+        margin-top: 10px;
+        background-color: #fafafa;
+        box-shadow: 0 2px 4px 0 rgba(255, 95, 0, 0.16);
+        border: solid 1px #ff5f00;
+        padding: 7px 10px;
+        display: inline-block;
+        color:#000;
+        margin-right: 30px;
+    }
+    .typelist{
+        width: 100px;
+        position: absolute;
+        z-index: 9;
+        background: #fff;
+        border:1px solid #ff5f00;
+        bottom: -79px;
+    }
+    .typelist p {
+        padding: 2px 10px;
+        border-bottom:1px solid #eee;
+        font-size:14px;
+        color:#000;
+        cursor: pointer;
+    }
+    .add {
+        margin-top: 20px;
+        background-color: #ff5f00;
+        border-color: #ff5f00;
+        color: #fff;
+        border: none;
+        padding: 7px 30px;
+        border-radius: 5px;
+        box-shadow: none;
+        font-size: 14px;
+        vertical-align: bottom;
+    }
+    
+    #list li:first-child .up {
+        display: none;
+    }
+    
+    #list li:last-child .down {
+        display: none;
+    }
+    
+    #newadd {
+        margin-bottom: 20px;
+        padding-top: 20px;
+    }
+    
+    #newadd .ivu-upload {
+        vertical-align: middle;
+    }
+    
+    .showAct {
+        display: none !important;
+    }
+</style>
+
+<body>
+    <div id="app">
+        <div class="row_left">
+            <iframe src="back_menu.html" class="menu_frame"></iframe>
+        </div>
+        <div class="row_right">
+            <div class="nav">
+                <ul>
+                    <li>
+                        <a href="operate_special.html">
+                            <p>专题推荐</p>
+                        </a>
+                    </li>
+                    <li class="navli_active">
+                        <a href="operate_banner.html">
+                            <p>首页banner</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="operate_edit.html">
+                            <p>编辑推荐</p>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="wrapper">
+                <ul id="list">
+                    <li v-for="banner in bannerlist" class="bannlist">
+                        <button class="up" @click="up($event,$index)"></button>
+                        <button class="down" @click="down($event,$index)"></button>
+                        <img src="/img/close.png" class="close" @click="close($event,$index)">
+                        <Upload v-ref:upload :on-success="suc" :format="['jpg','jpeg','png']" :show-upload-list="false" multiple type="drag" name="pic"
+                            action="/other/upload_img" style="display: inline-block;width:200px;margin-left:100px;vertical-align: middle;">
+                            <div style="width: 200px;height:91px;line-height: 90px;font-size: 30px;border:1px solid #ccc" @click="num($event,$index)">
+                                <img v-bind:src=banner.img_url class="showimg" />
+                            </div>
+                        </Upload>
+
+                        <div class="right">
+                            <input type="text" v-model=banner.content_url class="url" @change="change" />
+                            <p v-html=banner.type class="type" @click="showt(banner.order)"></p>
+                            <div class="typelist" style="display: none;">
+                               <p v-for="t in bannertype" v-html=t.value @click="select_t(t.value,banner.order)"></p> 
+                            </div>
+                            <input type="button" value="提交" @click="submit($event,$index)" class="add">
+                        </div>
+                    </li>
+                </ul>
+                <div id="newadd">
+                    <Upload v-ref:upload :on-success="suc" :format="['jpg','jpeg','png']" :show-upload-list="false" multiple type="drag" name="pic"
+                        action="/other/upload_img" style="display: inline-block;width:200px;margin-left:100px;">
+                        <div style="width: 200px;height:91px;line-height: 90px;font-size: 30px;border:1px solid #ccc">
+                            <p v-bind:class="{ showAct: isActive1 }">+</p>
+                            <img v-bind:src=imgurl class="showimg" v-bind:class="{ showAct: isActive }">
+                        </div>
+                    </Upload>
+                    <div class="right">
+                        <input type="text" value="" class="url" v-model="url" placeholder="链接地址" />
+                        <p v-html='type' class="type" @click="show_t = true"></p>
+                        <div class="typelist" v-if="show_t == true">
+                            <p v-for="t in bannertype" v-html=t.value @click="select_t(t.value)"></p> 
+                        </div>
+                        <input type="button" value="添加" @click="add()" class="add">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var app = new Vue({
+            el: "#list",
+            data: {
+                bannerlist: [],
+                number: 0,
+                bannertype:[
+                    {
+                        value: 'h5',
+                        label: 'h5页面'
+                    },{
+                        value: 'skill_video',
+                        label: '视频技能'
+                    },{
+                        value: 'skill_graphic',
+                        label: '图片技能'
+                    }
+                ]
+            },
+            methods: {
+                //与上一个banner位置交换
+                up(event, index) {
+                    var id1 = this.bannerlist[index].id;
+                    var id2 = this.bannerlist[index - 1].id;
+                    this.$http.post("/xadmin/xbanner", { id1: id1, id2: id2 }).then(res => {
+                        var data = res.body;
+                        if (data.out.status != null) {
+                            this.$Message.success('更换成功');
+                            window.location.reload();
+                        }
+                    })
+                },
+                //与下一个banner位置交换
+                down(event, index) {
+                    var id1 = this.bannerlist[index].id;
+                    var id2 = this.bannerlist[index + 1].id;
+                    this.$http.post("/xadmin/xbanner", { id1: id1, id2: id2 }).then(res => {
+                        var data = res.body;
+                        if (data.out.status != null) {
+                            this.$Message.success('更换成功');
+                            window.location.reload();
+                        }
+                    })
+                },
+                showt(index){
+                    var t = $($(".bannlist")[index]).find(".typelist").css("display","block");
+                    console.log(t);
+                },
+                select_t(t,index){
+                    this.bannerlist[index].type = t;
+                    var t = $($(".bannlist")[index]).find(".typelist").css("display","none");
+                },
+                //删除banner
+                close(event, index) {
+                    var r = confirm("确认要删除吗？");
+                    if (r != true) {
+                        return;
+                    }
+                    var id = this.bannerlist[index].id;
+                    this.$http.post("/xadmin/delbanner", { id: id }).then(res => {
+                        var data = res.body;
+                        if (data.out.status != null) {
+                            this.$Message.success('删除成功');
+                            window.location.reload();
+                        }
+                    })
+                },
+                //修改提交
+                submit(event, index) {
+                    var id = this.bannerlist[index].id;
+                    var imgurl = this.bannerlist[index].img_url;
+                    var content_url = this.bannerlist[index].content_url;
+                    var type = this.bannerlist[index].type;
+                    console.log(content_url)
+                    this.$http.post("/xadmin/setbanner", { id: id, img_url: imgurl, content_url: content_url,type:type }).then(res => {
+                        var data = res.body;
+                        if (data.out.status != null) {
+                            this.$Message.success('修改成功');
+                            window.location.reload();
+                        }
+                    })
+                },
+                //当前修改图片的成功回调
+                suc(response, file, fileList) {
+                    if (response.err == "") {
+                        this.bannerlist[this.number].img_url = response.out.url;
+                        this.$Message.success('更换成功');
+                    }
+                },
+                //获取当前点击的index
+                num(event, index) {
+                    this.number = index;
+                },
+                change() {
+
+                }
+            },
+            ready() {
+                var slef = this;
+                // 获取全部banner信息              
+                $.get('/xadmin/getbanners', function (data, err) {
+                    console.log(data);
+                    slef.bannerlist = data.out.datas;
+                })
+            }
+        })
+        var img = new Vue({
+            el: "#newadd",
+            data: {
+                imgurl: '',
+                isActive1: false,
+                isActive: true,
+                url: '',
+                type:'h5',
+                show_t:false,
+                bannertype:[
+                    {
+                        value: 'h5',
+                        label: 'h5页面'
+                    },{
+                        value: 'skill_video',
+                        label: '视频技能'
+                    },{
+                        value: 'skill_graphic',
+                        label: '图片技能'
+                    }
+                ]
+            },
+            methods: {
+                //添加新banner图片成功回调
+                suc(response, file, fileList) {
+                    console.log(response.err);
+                    if (response.err == "") {
+                        this.isActive1 = true;
+                        this.isActive = false;
+                        console.log(response.out.url);
+                        this.imgurl = response.out.url;
+                    }
+                },
+                select_t(val){
+                    this.type = val;
+                    this.show_t = false;
+                },
+                //添加banner
+                add() {
+                    console.log(this.url);
+                    this.$http.post("/xadmin/addbanner", { img_url: this.imgurl, content_url: this.url,type:this.type }).then(res => {
+                        var data = res.body;
+                        if (data.out.id != null) {
+                            this.$Message.success('添加成功');
+                            window.location.reload();
+                        }
+                    }, res => {
+                        console.log(res.error);
+                    })
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>

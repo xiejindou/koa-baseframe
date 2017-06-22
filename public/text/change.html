@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+
+	<title>wangEditor mobile test</title>
+
+	<!--
+		<script src="http://192.168.1.100:8881/target/target-script-min.js#anonymous"></script>
+	-->
+
+	<!--引用css-->
+	<link rel="stylesheet" type="text/css" href="wangEditor-mobile.css">
+
+	<style type="text/css">
+		html,
+		body {
+			/*background-color:#f1f1f1;*/
+			/*text-shadow: 0 0 2px #ccc;*/
+			margin: 0;
+			height: 100%;
+		}
+		
+		.wangEditor-mobile-menu-container {
+			text-shadow: none;
+			top: 0 !important;
+		}
+		
+		a {
+			text-decoration: none;
+		}
+		
+		.title {
+			padding: 15px 0;
+			text-align: center;
+			opacity: 0.7;
+		}
+		
+		.container {
+			width: 100%;
+			height: 100%;
+			/*min-height: 300px;*/
+			/*border:1px solid #ccc;*/
+			background-color: #eee;
+			text-align: left;
+			/*box-shadow: 0 0 10px #ccc;*/
+			text-shadow: none;
+		}
+		
+		footer {
+			width: 100%;
+			text-align: center;
+			padding: 10px 0;
+			opacity: 0.6;
+			margin-top: 10px;
+		}
+		
+		.wangEditor-mobile-txt {
+			height: 100%;
+			/*min-height:300px;*/
+		}
+		
+		img {
+			width: 100%;
+		}
+		
+		.wangEditor-mobile-txt .focus-elem {
+			background: #EEE;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="container">
+		<textarea id="textarea1" style="width:100%;">
+				<p></p>
+			</textarea>
+	</div>
+	<script type="text/javascript" src="../js/jquery.min.js"></script>
+	<script type="text/javascript" src="zepto.js"></script>
+	<!--<script type="text/javascript" src="zepto.touch.js"></script>-->
+	<script type="text/javascript" src="wangEditor-mobile.js?v=12456789"></script>
+	<script type="text/javascript">
+		var $txt;
+		$(function () {
+			// $(".container").height($(window).height());
+			// 全局配置
+			// ___E.config.menus = ['bold', 'color', 'quote'];
+
+			// 生成编辑器
+			var editor = new ___E('textarea1');
+
+			// 自定义配置
+			editor.config.uploadImgUrl = '/other/upload_img1';
+
+			// editor.config.menus = ['bold', 'quote', 'list','img'];
+			$txt = editor.$txt;
+			// 初始化
+			editor.init();
+			// console.log(editor.$txt);
+		});
+		if (/(iPhone|iPad|iPod|iOS)/i.test(navigator.userAgent)) {  //判断iPhone|iPad|iPod|iOS
+			$txt.html('技能收费内容');
+		} else if (/(Android)/i.test(navigator.userAgent)) {   //判断Android
+
+		}
+		function text() {
+			var h = $(".wangEditor-mobile-txt").children();
+			freelist = listpush(h);
+			console.log(freelist)
+			return freelist;
+		}
+		function listpush(html) {
+			var list = [];
+			$.each(html, function (index, val) {
+				var img = $(val).attr("src");
+				var content;
+				if (img) {
+					content = {
+						text: '',
+						img: img
+					}
+					list.push(content);
+				} else {
+					var text = $(val).html();
+					if (text.indexOf("src") > 0) {
+						for (i = 0; i < $(val).find('img').length; i++) {
+							var src = $($(val).find('img')[i]).attr("src");
+							if (src) {
+								content = {
+									text: '',
+									img: src
+								}
+							}
+							list.push(content);
+						}
+					} else {
+						content = {
+							text: text,
+							img: ''
+						}
+						list.push(content);
+					}
+				}
+			})
+			function photo() {
+				$(".icon-wangEditor-m-picture").trigger("click")
+			}
+			function emoji() {
+
+			}
+			function bold() {
+
+			}
+			$('#textarea1').focus(function () {
+				console.log($('#textarea1').val());
+			})
+			$('#textarea1').on('change', function () {
+				console.log($('#textarea1').val());
+			})
+	</script>
+</body>
+
+</html>

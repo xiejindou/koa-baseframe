@@ -1,0 +1,180 @@
+html,
+body {
+    height: 100%;
+}
+
+#app {
+    height: 100%;
+}
+
+.ivu-menu-item {
+    width: 50%;
+    text-align: center;
+}
+
+iframe {
+    width: 100%;
+    height: 91%;
+    margin-top: 1px;
+    min-height: 440px;
+}
+
+.page1 {
+    margin-top: 25px;
+    float: right;
+    padding-right: 10px;
+}
+
+.e-p {
+    margin-top: 10px;
+}
+
+.e-s {
+    font-weight: bold;
+    margin-right: 15px;
+}
+
+.e-img1 {
+    width: 155px;
+    height: 125px;
+    vertical-align: middle;
+    cursor: pointer;
+}
+
+.e-img2 {
+    width: 185px;
+    vertical-align: middle;
+    cursor: pointer;
+    margin-right: 10px;
+    height: 125px;
+}
+
+.e-img3 {
+    width: 140px;
+    vertical-align: middle;
+    cursor: pointer;
+    height: 95px;
+}
+
+.e-right {
+    padding-left: 16px;
+    margin-top: 22px;
+}
+
+.no_pass {
+    font-weight: bold;
+    margin: 20px 0 6px 0;
+}
+
+.no_pass_reason {
+    width: 179px;
+    height: 95px;
+    margin: 0 0 8px 0;
+}
+
+.bigview {
+    width: 580px;
+    display: block;
+    margin: 0 auto;
+}
+.name,.number{
+    font-size: 13px;
+    letter-spacing: 0.2px;
+    color: #666666;
+    margin-top: 5px;
+}
+.box{
+    display: inline-block;
+    border: 1px solid #c8c8c8;
+    position: relative;
+    padding: 14px;
+    margin-top: 30px;
+    vertical-align: top;
+    margin-right: 5px;
+}
+.tl{
+    position: absolute;
+    top: -8px;
+    background: #fff;
+    padding: 0 5px;
+    left: 13px;
+}
+/*修改modal*/
+
+.ivu-modal-footer {
+    display: none!important;
+}
+
+.ivu-modal-body {
+    padding-bottom: 33px!important;
+}
+
+.ivu-modal-header {
+    padding: 10px 16px!important;
+}
+.reason{
+    width: 78%;
+    height: 45px;
+    margin-top: 20px;
+    background-color: #ffffff;
+    box-shadow: 0 2px 4px 0 rgba(255, 95, 0, 0.16);
+    border: solid 1px #ff5f00;
+    position: relative;
+    font-size:0;
+    display: inline-block;
+        vertical-align: bottom;
+}
+.pass1{
+    color:#ff5f00;
+}
+.pass{
+    height: 100%;
+    width: 20%;
+    height: 45px;
+    vertical-align: middle;
+    font-size: 16px;
+    letter-spacing: 0.1px;
+    text-align: center;
+    color: #fff;
+    background: #ff5f00;
+    cursor: pointer;
+}
+.reason button{
+    height: 100%;
+    width: 20%;
+    vertical-align: middle;
+    font-size: 16px;
+    letter-spacing: 0.1px;
+    text-align: center;
+    color: #ff5f00;
+    cursor: pointer;
+}
+.ivu-input{
+    height: 43px;
+    border: none;
+    /*border-right:1px solid #eee; */
+}
+.select{
+    vertical-align: top;
+    height: 100%;
+    cursor: pointer;
+    /*border-right: 1px solid #eee;*/
+}
+.option{
+    width: 60%;
+    position: absolute;
+    top:45px;
+    left: 0;
+    /*padding-bottom: 10px;*/
+    background: #fbfbfb;
+}
+.option p {
+    font-size: 12px;
+    letter-spacing: 0.1px;
+    color: #9b9b9b;
+    border-top: solid 1px #cecece;
+    /*margin-top:10px;*/
+    cursor: pointer;
+    padding:8px;
+    transform-origin: center top 0px;
+}

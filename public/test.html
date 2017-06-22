@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>技能大师登录系统</title>
+    <script type="text/javascript" src="/js/jquery.min.js"></script>
+    <script id="scriptA"></script>
+</head>
+<body>
+    <button onclick="test1()">is_login</button>
+    <button onclick="login()">login</button>
+    <button onclick="logout()">logout</button>
+    <button onclick="setCookie()">setCookie</button>
+    <button onclick="testCookie()">testCookie</button>
+</body>
+<script>
+    function testCookie(){
+        $.post('/test/cookietest',function(data){
+            console.log("testcookie out:"+JSON.stringify(data));
+        });
+    }
+    function setCookie(){
+        var script = document.getElementById('scriptA');
+        script.setAttribute('src', '/other/setcookie?sess=jjjjjjjjjjjjjjjjjjj&sess1=uuuuuuuuuuuuuuuuuuuuu');
+    }
+    // $.ajaxSetup({ //设置全局性的Ajax选项
+    //     headers: {
+    //         Cookie: "skills_app:sess=jX39oMCYbf7hJ8N6WKP-FsT7mhYzBYwK; skills_app:sess.sig=tXersLbi04jwLtB2oOodnhiwmUY"
+    //     }
+    // })
+    function test1(){
+        $.get('/user/is_login',function(data){
+            console.log("is_login out:"+JSON.stringify(data));
+        });
+    }
+    function login(){
+        let postdt = {
+            tel: '10211655438',
+            code: '2322',
+            type: '0'
+        };
+        $.post('/login/verifyCode',postdt,function(data){
+            console.log("login out:"+JSON.stringify(data));
+        });
+    }
+    function logout(){
+       let postdt = {};
+        $.post('/user/logout',postdt,function(data){
+            console.log("loginout out:"+JSON.stringify(data));
+        }); 
+    }
+
+    function delone (){
+        var arr = '';
+        $.get('/test/delone?id=61cbab20-24a9-11e7-9c30-3dd950046529',function(data){
+                let arr2 = data.map(v=>v.id);
+                console.log(arr2);
+                $.post('command/del_skills',{ids:arr2,pwd:'jkiIkiijdiciscijikHuh97283jihkn7dsDrsf3jfio2i8F4TTTf'},function(data){
+                                console.log('ok');
+                })
+        })
+         
+
+
+    }
+
+    function delone2 (){
+        var arr = '';
+        $.get('/test/delone?id=5e3e21b0-1dd1-11e7-ac20-adb472d1b1ab',function(data){
+             console.log(data);
+        })
+
+    }
+
+    delone();
+</script>
+</html>

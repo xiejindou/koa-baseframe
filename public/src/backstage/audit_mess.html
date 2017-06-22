@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>留言审查</title>
+    <link rel="stylesheet" type="text/css" href="/css/iview.css">
+    <link rel="stylesheet" type="text/css" href="../css/menu.css">
+    <script type="text/javascript" src="/js/vue.min.js"></script>
+    <script type="text/javascript" src="/js/iview.min.js"></script>
+    <script type="text/javascript" src="/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/js/vue-resource.min.js"></script>
+    <script type="text/javascript" src="../js/admin_islogin.js"></script>
+</head>
+<style>
+    body,
+    html {
+        height: 100%;
+    }
+    
+    #app {
+        height: 100%;
+    }
+    
+    .ivu-menu-item {
+        width: 50%;
+        text-align: center;
+    }
+    
+    iframe {
+        width: 100%;
+        height: 91%;
+        margin-top: 1px;
+        min-height: 440px;
+    }
+    
+    .page1 {
+        margin-top: 25px;
+        float: right;
+        padding-right: 10px;
+    }
+    
+    .nopass {
+        color: #ff5f00;
+        font-size: 14px;
+        cursor: pointer;
+    }
+    
+    .pass {
+        color: #666;
+        font-size: 14px;
+    }
+    
+    .all_pass {
+        height: 32px;
+        width: 91px;
+        border-radius: 0;
+        margin-top: 25px;
+        float: right;
+        margin-right: 20px;
+    }
+    
+    .all_pass:hover {
+        background: #e6742f;
+    }
+    
+    .audit {
+        display: inline-block;
+        background-color: #ffffff;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.13);
+        position: fixed;
+    }
+    
+    .ivu-modal-header,
+    .ivu-modal-footer,
+    .ivu-modal-close {
+        display: none;
+    }
+    
+    .ivu-modal-body {}
+    
+    .errlist li {
+        margin-bottom: 15px;
+    }
+    
+    .errlist img {
+        width: 20px;
+        height: 20px;
+        vertical-align: bottom;
+        margin-right: 5px;
+    }
+    
+    .errlist p {
+        display: inline-block;
+        font-size: 14px;
+        varter-spacing: 0.2px;
+        color: #ff5f00;
+    }
+    
+    .confim {
+        width: 80px;
+        height: 35px;
+        border-radius: 0;
+        font-size: 16px;
+    }
+    
+    .confim:hover {
+        background: #e6742f;
+    }
+</style>
+
+<body>
+    <div id="app">
+        <div class="row_left">
+            <iframe src="back_menu.html" class="menu_frame"></iframe>
+        </div>
+        <div class="row_right">
+            <div class="nav">
+                <ul>
+                    <li>
+                        <a href="audit_skill.html">
+                            <p>技能审核</p><span>0</span></a>
+                    </li>
+                    <li>
+                        <a href="audit_auth.html">
+                            <p>认证审核</p><span>0</span></a>
+                    </li>
+                    <li>
+                        <a href="audit_report.html">
+                            <p>举报技能</p><span>0</span></a>
+                    </li>
+                    <li>
+                        <a href="audit_user.html">
+                            <p>举报用户</p><span>0</span></a>
+                    </li>
+                    <li class="navli_active">
+                        <a href="audit_mess.html">
+                            <p>留言审查</p><span>0</span></a>
+                    </li>
+                    <li>
+                        <a href="audit_money.html">
+                            <p>提现审查</p><span>0</span></a>
+                    </li>
+                </ul>
+            </div>
+            <div class="wrapper">
+                <mytable></mytable>
+            </div>
+        </div>
+    </div>
+    <template id="main">
+        <i-table border :columns="columns1" :data="list" :row-class-name="rowClassName"></i-table>
+        <Page :total="total_page" :page-size="10" show-elevator show-total @on-change="pageChange" class="page1"></Page>
+        <i-button type="primary" class="all_pass" size="small" @click="all">一键通过</i-button>
+        <Modal :visible.sync="modal" title="编辑" width="400" ok-text="保存" :style="{top: '150px'}" @on-ok="keep">
+            <ul class="errlist">
+                <li v-for="err in errlist" @click="select($index,err.label)">
+                    <img src="/img/no_skill.png" />
+                    <p>{{err.label}}</p>
+                </li>
+            </ul>
+            <i-button type="primary" class="confim" size="small" @click="confim">确定</i-button>
+        </Modal>
+    </template>
+    <script>
+        Vue.component('mytable', {
+            template: '#main',
+            data: function () {
+                return {
+                    total_page: 0, //总页数
+                    per_page: 10, //每页显示多少条
+                    modal: false, //编辑的视窗不可见
+                    columns1: [{
+                        title: '留言内容',
+                        key: 'comment_content',
+                        width: '600'
+                    }, {
+                        title: '用户名',
+                        align: 'center',
+                        key: 'user_name'
+                    }, {
+                        title: '发表时间',
+                        align: 'center',
+                        key: 'comment_time'
+                    }, {
+                        title: '操作',
+                        key: 'result',
+                        align: 'center',
+                        //width: 160,
+                        render(row, column, index) {
+                            if (row.result == "未审核") {
+                                return `<i-button type="primary" size="small" @click="edit(${index})">等待审核</i-button>`;
+                            } else if (row.result == "不处理") {
+                                return `<button class="pass" >通过</button>`;
+                            } else {
+                                return `<button class="pass" >删除</button>`;
+                            }
+                        }
+                    }],
+                    list: [], //表单的总数据
+                    errlist: [
+                        {
+                            value: 'sex',
+                            label: '恶言攻击他人'
+                        },
+                        {
+                            value: 'error',
+                            label: '留言含非法内容'
+                        }
+                    ],
+                    errlabel: '',
+                    id: ''
+                }
+            },
+            methods: {
+                rowClassName(row, index) {
+                    var num = index % 2;
+                    if (num == 0) {
+                        return 'single';
+                    } else if (num == 1) {
+                        return 'double';
+                    }
+                },
+                getPage(page, len) {
+                    //page表示当前页码，len表示每页的长度
+                    var self = this;
+                    len = len || self.per_page;
+                    this.$http.get("/xadmin/getcomments?page=" + page + "&len=" + len).then(res => {
+                        self.list = res.body.out.datas;
+                        self.total_page = res.body.out.count;
+                    });
+                },
+                pageChange(index) {
+                    this.getPage(index - 1);
+                },
+                edit(index) {
+                    console.log(index);
+                    this.id = this.list[index].id;
+                    this.modal = true;
+                },
+                select(index, label) {
+                    this.errlabel = label;
+                    $(".errlist li img").attr("src", "/img/no_skill.png");
+                    $($(".errlist li img")[index]).attr("src", "/img/all_skill.png");
+                },
+                confim() {
+                    var self = this;
+                    if(!this.errlabel){
+                        this.$Message.error('请选择原因！');
+                        return;
+                    }
+                    var data = {
+                        id: this.id,
+                        status: 'ok',
+                        remark: this.errlabel
+                    }
+                    this.$http.post("/xadmin/checkcomment", data).then(res => {
+                        var data = res.body.out;
+                        if (data.status == "ok") {
+                            self.$Message.success('审核完成');
+                            this.modal = false;
+                            self.getPage(0);
+                        }
+                    });
+                },
+                all() {
+                    var list = this.list;
+                    var self = this;
+                    var oklist = [];              
+                    $.each(list, function (index, val) {
+                        if (val.result == "未审核") {
+                            oklist.push(list[index].id);
+                        }
+                    })
+                    if (oklist.length == 0) {
+                        self.$Message.error('没有要审核的留言');
+                        return;
+                    }
+                    this.$http.post("/xadmin/checkcomments", { ids: oklist }).then(res => {
+                        var data = res.body.out;
+                        if (data.status == "ok") {
+                            self.$Message.success('审核完成');
+                            self.getPage(0);
+                            $(".ivu-page-next").trigger("click");
+                        }
+                    });
+                }
+            },
+            ready() {
+                this.getPage(0);
+                this.$http.get("/xadmin/get_raw_count").then(res => {
+                    var data = res.body;
+                    $($(".nav ul li span")[0]).html(data.out.check_skill);
+                    $($(".nav ul li span")[1]).html(data.out.identify_idcard);
+                    $($(".nav ul li span")[2]).html(data.out.report);
+                    $($(".nav ul li span")[3]).html(data.out.report_usr);
+                    $($(".nav ul li span")[4]).html(data.out.check_comment);
+                    $($(".nav ul li span")[5]).html(data.out.withdraw);
+                });
+            }
+        });
+        var app = new Vue({
+            el: "#app"
+        })
+    </script>
+</body>
+
+</html>

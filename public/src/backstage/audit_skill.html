@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>技能审核</title>
+    <link rel="stylesheet" type="text/css" href="/css/iview.css">
+    <!--<link rel="stylesheet" type="text/css" href="../css/common.css">-->
+    <link rel="stylesheet" type="text/css" href="../css/menu.css">
+    <script type="text/javascript" src="/js/vue.min.js"></script>
+    <script type="text/javascript" src="/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/js/iview.min.js"></script>
+    <script type="text/javascript" src="/js/vue-resource.min.js"></script>
+    <script type="text/javascript" src="../js/admin_islogin.js"></script>
+</head>
+<style>
+    body,
+    html {
+        height: 100%;
+    }
+    
+    #app {
+        height: 100%;
+    }
+    
+    .ivu-menu-item {
+        width: 50%;
+        text-align: center;
+    }
+    
+    .iframe {
+        width: 375px;
+        height: 667px;
+        margin-top: 70px;
+        min-height: 440px;
+        min-width: 320px;
+        background: #fff;
+        border: none;
+        box-shadow: 0 2px 15px 0 rgba(0, 0, 0, 0.2);
+    }
+    
+    .page1 {
+        margin-top: 25px;
+        float: right;
+        padding-right: 10px;
+    }
+    
+    .ivu-btn-primary {
+        background-color: #ff5f00;
+        border: 1px solid #ff5f00;
+        padding: 6px 17px;
+        border-radius: 0px !important;
+        box-shadow: 0 2px 4px 0 rgba(255, 95, 0, 0.16);
+    }
+    
+    .pop {
+        width: 100%;
+        height: 100%;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 1000;
+        background-color: rgba(0, 0, 0, 0.5);
+        text-align: center;
+    }
+    
+    .seebox {
+        width: 470px;
+        background: #fff;
+        display: inline-block;
+        vertical-align: top;
+        margin-top: 120px;
+        margin-left: 0;
+        padding: 30px 27px;
+        text-align: left;
+        position: relative;
+    }
+    
+    .seehome {
+        width: 100%;
+    }
+    
+    .skilldata {
+        width: 351px;
+        position: absolute;
+        height: 80px;
+        top: 95px;
+        left: 62px;
+    }
+    
+    .skilldata ul li {
+        height: 80px;
+        position: relative;
+    }
+    
+    .skilldata ul li .title {
+        font-weight: normal;
+        font-style: normal;
+        font-stretch: normal;
+        line-height: normal;
+        color: #343434;
+        font-size: 16px;
+        display: inline-block;
+        width: 65%;
+        text-align: left;
+    }
+    
+    .skilldata ul li .title_url {
+        width: 110px;
+        height: 80px;
+        border-radius: 5px;
+        float: right;
+        border: 1px solid #ddd;
+    }
+    
+    .skilldata ul li div {
+        position: absolute;
+        bottom: 0;
+    }
+    
+    .skilldata ul li .imgurl {
+        width: 16px;
+        vertical-align: bottom;
+    }
+    
+    .skilldata ul li span {
+        font-weight: normal;
+        font-style: normal;
+        font-stretch: normal;
+        line-height: normal;
+        color: #9b9b9b;
+        font-size: 12px;
+    }
+    
+    .seecatgoy {
+        font-size: 16px;
+        font-weight: normal;
+        font-style: normal;
+        font-stretch: normal;
+        line-height: normal;
+        color: #343434;
+        margin-top: 0px;
+        text-align: left;
+        padding: 15px 0;
+        border-top: 1px solid #eee;
+        border-bottom: 1px solid #eee;
+    }
+    
+    .seecatgoy span {
+        color: #ff5f00;
+        margin-left: 15px;
+    }
+    
+    .seelook {
+        width: 94px;
+        height: 32px;
+        font-family: PingFang-SC;
+        font-size: 14px;
+        letter-spacing: 0.2px;
+        text-align: center;
+        color: #ff5f00;
+        background: none;
+        border: none;
+        margin-top: 30px;
+        float: right;
+        cursor: pointer;
+    }
+    
+    .release {
+        width: 94px;
+        height: 40px;
+        background-color: #ff5f00;
+        font-size: 14px;
+        color: #fff;
+        letter-spacing: 0.2px;
+        text-align: center;
+        border: none;
+        margin-top: 30px;
+        float: right;
+        cursor: pointer;
+    }
+    
+    .low {
+        width: 100%;
+        margin-top: 2px;
+    }
+    
+    .seetl {
+        font-size: 22px;
+        font-weight: 500;
+        font-style: normal;
+        font-stretch: normal;
+        line-height: normal;
+        letter-spacing: 0.2px;
+        color: #343434;
+        margin-top: 10px;
+        margin-left: 12px;
+        text-align: left;
+    }
+    
+    .arrow {
+        width: 9px;
+        vertical-align: text-bottom;
+        margin-left: 5px;
+    }
+    
+    .reason {
+        width: 100%;
+        height: 45px;
+        margin-top: 20px;
+        background-color: #ffffff;
+        box-shadow: 0 2px 4px 0 rgba(255, 95, 0, 0.16);
+        border: solid 1px #ff5f00;
+        position: relative;
+        font-size: 0;
+    }
+    
+    .reason button {
+        height: 100%;
+        width: 20%;
+        vertical-align: middle;
+        font-size: 16px;
+        letter-spacing: 0.1px;
+        text-align: center;
+        color: #ff5f00;
+        cursor: pointer;
+    }
+    
+    .ivu-input {
+        height: 43px;
+        border: none;
+        /*border-right:1px solid #eee; */
+    }
+    
+    .select {
+        vertical-align: top;
+        height: 100%;
+        cursor: pointer;
+        /*border-right: 1px solid #eee;*/
+    }
+    
+    .option {
+        width: 60%;
+        position: absolute;
+        top: 45px;
+        left: 0;
+        /*padding-bottom: 10px;*/
+        background: #fbfbfb;
+    }
+    
+    .option p {
+        font-size: 12px;
+        letter-spacing: 0.1px;
+        color: #9b9b9b;
+        border-top: solid 1px #cecece;
+        /*margin-top: 10px;*/
+        cursor: pointer;
+        padding: 8px;
+        transform-origin: center top 0px;
+    }
+</style>
+
+<body>
+    <div id="app">
+        <div class="row_left">
+            <iframe src="back_menu.html" class="menu_frame"></iframe>
+        </div>
+        <div class="row_right">
+            <div class="nav">
+                <ul>
+                    <li class="navli_active">
+                        <a href="audit_skill.html">
+                            <p>技能审核</p><span>0</span></a>
+                    </li>
+                    <li>
+                        <a href="audit_auth.html">
+                            <p>认证审核</p><span>0</span></a>
+                    </li>
+                    <li>
+                        <a href="audit_report.html">
+                            <p>举报技能</p><span>0</span></a>
+                    </li>
+                    <li>
+                        <a href="audit_user.html">
+                            <p>举报用户</p><span>0</span></a>
+                    </li>
+                    <li>
+                        <a href="audit_mess.html">
+                            <p>留言审查</p><span>0</span></a>
+                    </li>
+                    <li>
+                        <a href="audit_money.html">
+                            <p>提现审查</p><span>0</span></a>
+                    </li>
+                </ul>
+            </div>
+            <div class="wrapper">
+                <mytable></mytable>
+            </div>
+        </div>
+    </div>
+    <template id="main">
+        <i-table border :row-class-name="rowClassName" :columns="columns1" :data="list"></i-table>
+        <Page :total="total_page" :page-size="per_page" show-elevator show-total @on-change="pageChange" class="page1"></Page>
+        <!--<Modal :visible.sync="modal" title="编辑" width="700" ok-text="保存" :style="{top: '20px'}" :mask-closable="false" @on-ok="keep">           
+        </Modal>-->
+        <div class="pop" v-if="onpreview == true" @click="pop">
+            <iframe v-bind:src=frame_src class="iframe"></iframe>
+            <div class="seebox" @click="nopop">
+                <img src="/img/pre_title.png" class="seehome" />
+                <div class="skilldata">
+                    <ul>
+                        <li>
+                            <p class="title" v-html=skill_title>1231231231</p>
+                            <img v-bind:src=imgurl class="title_url" />
+                            <div>
+                                <img src="/img/comment_2.png" class="imgurl" />
+                                <span>999</span>
+                                <img src="/img/favour_2.png" class="imgurl" />
+                                <span>999</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <p class="seecatgoy">技能分类<span v-html="catgoyname"></span></p>
+                <!--<img src="/img/arrow.png" class="arrow"/>-->
+                <div>
+                    <ul>
+                        <li></li>
+                        <li></li>
+                    </ul>
+                </div>
+                <div class="reason">
+                    <i-input :value.sync="err_txt" placeholder="请输入..." style="width: 50%;outline:none;background-color: #fbfbfb;"></i-input>
+                    <img src="/img/select.png" class="select" @click="select" />
+                    <div class="option" v-if="option_show == true">
+                        <p v-for="err in errlist" @click="err_text(err.label)">{{err.label}}</p>
+                    </div>
+                    <button class="" style="border-right:1px solid #eee;" @click="release('del')">删除</button>
+                    <button class="" @click="release('draft')">草稿</button>
+                </div>
+                <button class="release" @click="release('pass')">通过</button>
+            </div>
+        </div>
+    </template>
+    <script src="../js/method.js"></script>
+    <script>
+        Vue.component('mytable', {
+            template: '#main',
+            data: function () {
+                return {
+                    total_page: 0, //总页数
+                    per_page: 10, //每页显示的个数
+                    modal: false, //编辑的视窗不可见
+                    columns1: [{
+                        title: '技能名称',
+                        key: 'skill_title',
+                        width: '400'
+                    }, {
+                        title: '技能分类',
+                        key: 'category_name',
+                        sortable: true,
+                        align: 'center',
+                        width: '110'
+                    }, {
+                        title: '作者',
+                        key: 'user_name'
+                    }, {
+                        title: '发布/修改时间',
+                        key: 'skill_time',
+                        width: '160',
+                        sortable: true
+                    }, {
+                        title: '审核结果',
+                        align: 'center',
+                        key: 'status',
+                        sortable: true
+                    }, {
+                        title: '处理备注',
+                        key: 'fail_text'
+                    }, {
+                        title: '操作',
+                        key: 'check_status',
+                        align: 'center',
+                        //width: 160,
+                        render(row, column, index) {
+                            if (row.status == '未处理') {
+                                return `<i-button type="primary" size="small" @click="edit(${index})">审核</i-button>`;
+                            } else if (row.status == "审核通过") {
+                                return `<p>通过</p>`;
+                            } else {
+                                return `<p>不通过</p>`;
+                            }
+
+                        }
+                    }],
+                    list: [], //表单的总数据
+                    frame_src: '',
+                    onpreview: false,
+                    imgurl: '',
+                    errlist: [
+                        {
+                            value: 'sex',
+                            label: '您的技能涉嫌含违法内容，只能帮您删除'
+                        },
+                        {
+                            value: 'error',
+                            label: '您的技能错误内容过多还请仔细检查，小编只能帮您退回草稿'
+                        }
+                    ],
+                    model1: '',
+                    option_show: false,
+                    err_txt: '',
+                    id: ''
+                }
+            },
+            methods: {
+                rowClassName(row, index) {
+                    var num = index % 2;
+                    if (num == 0) {
+                        return 'single';
+                    } else if (num == 1) {
+                        return 'double';
+                    }
+                },
+                getPage(page, len) {
+                    //page表示当前页码，len表示每页的长度
+                    var self = this;
+                    len = len || self.per_page;
+                    //console.log(`page:${page},len:${len}`);
+                    this.$http.get("/xadmin/getskills?page=" + page + "&len=" + len).then(res => {
+                        self.list = res.body.out.datas;
+                        self.per_page  = 10;
+                        self.total_page = res.body.out.count;
+                    });
+                },
+                pageChange(index) {
+                    this.getPage(index - 1);
+                },
+                edit(index) {
+                    $("body").addClass("scroll");
+                    var data = this.list[index];
+                    this.imgurl = data.skill_title_url;
+                    this.skill_title = data.skill_title;
+                    this.frame_src = '/xadmin/skill_info?id=' + data.skill_id;
+                    this.catgoyname = data.category_name;
+                    this.onpreview = true;
+                    this.id = data.skill_id;
+                },
+                err_text(t) {
+                    this.err_txt = t;
+                    this.option_show = false;
+                },
+                select() {
+                    if (this.option_show) {
+                        this.option_show = false;
+                    } else {
+                        this.option_show = true;
+                    }
+                },
+                nopop(ev) { 
+                    ev.cancelBubble = true;
+                },
+                pop() {
+                    this.onpreview = false;
+                    $("body").removeClass("scroll");
+                },
+                release(status) {
+                    var self = this;
+                    var data = {
+                        id: this.id,
+                        status: status
+                    }
+                    if (status == "del" || status == "draft") {
+                        if (!this.err_txt) {
+                            this.$Message.error('请填写不合格的原因！');
+                            return;
+                        }
+                        data.fail_text = this.err_txt;
+                    }
+                    this.$http.post("/xadmin/checkskill", data).then(res => {
+                        self.$Message.success('审核完成');
+                        this.onpreview = false;
+                        $("body").removeClass("scroll");
+                        this.getPage(0);
+                    });
+                }
+            },
+            ready() {
+                this.getPage(0);
+                this.$http.get("/xadmin/get_raw_count").then(res => {
+                    var data = res.body;
+                    $($(".nav ul li span")[0]).html(data.out.check_skill);
+                    $($(".nav ul li span")[1]).html(data.out.identify_idcard);
+                    $($(".nav ul li span")[2]).html(data.out.report);
+                    $($(".nav ul li span")[3]).html(data.out.report_usr);
+                    $($(".nav ul li span")[4]).html(data.out.check_comment);
+                    $($(".nav ul li span")[5]).html(data.out.withdraw);
+                });
+            }
+        });
+        var app = new Vue({
+            el: "#app"
+        })
+            //window.parent.test();
+    </script>
+</body>
+
+</html>

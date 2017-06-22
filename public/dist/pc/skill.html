@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>觅技发布技能后台</title>
+    <link rel="stylesheet" type="text/css" href="/css/iview.css">
+    <link rel="stylesheet" type="text/css" href="../css/pc-pic.css?v=655251c">
+    <link rel="stylesheet" href="/css/style.css" type="text/css" />
+    <script type="text/javascript" src="/js/vue.min.js"></script>
+    <script type="text/javascript" src="/js/iview.min.js"></script>
+    <script type="text/javascript" src="/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/js/cropbox.js"></script>
+    <script src="https://cdn.jsdelivr.net/vue.resource/1.2.1/vue-resource.min.js"></script>
+    <script type="text/javascript" src="../js/pc_islogin.js?v=bee15b5"></script>
+    <style>
+        #content {
+            padding-top: 0;
+        }
+        
+        .main {
+            margin-bottom: 0;
+        }
+        
+        .ivu-table td {
+            background-color: transparent;
+        }
+        
+        .ivu-table td,
+        .ivu-table th {
+            background-color: none !important;
+            border-bottom: none;
+        }
+        
+        .ivu-table:before {
+            width: 0px;
+        }
+        
+        .ivu-table:after {
+            height: 0px;
+        }
+        
+        .ivu-table-wrapper {
+            border: none;
+        }
+        
+        tr td:last-child {
+            border: none;
+        }
+        
+        .del {
+            background-color: transparent;
+            color: #ff5f00;
+        }
+        
+        .serch_text {
+            width: 200px;
+            background-color: #fafafa;
+            box-shadow: 0 1px 2px 0 rgba(255, 95, 0, 0.16);
+            border: solid 0.5px #ff5f00;
+            letter-spacing: 0.1px;
+            text-align: left;
+            font-size: 14px;
+            color: #9b9b9b;
+            padding: 4px 5px;
+        }
+        
+        .close1 {
+            width: 20px;
+            position: absolute;
+            left: 175px;
+            top: 5px;
+            cursor: pointer;
+        }
+        
+        .search {
+            background: #ff5f00;
+            color: #ffffff;
+            text-align: center;
+            font-size: 14px;
+            border: none;
+            padding: 5px 20px;
+            margin-left: 20px;
+            cursor: pointer;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div id="app">
+        <div id="menu">
+            <iframe src="menu.html" class="menu_frame"></iframe>
+        </div>
+        <div id="content">
+            <div class="wrapper">
+                <div class="main">
+                    <i-table border :row-class-name="rowClassName" :columns="columns1" :data="list"></i-table>
+                    <div style="position: relative;margin: 25px 0 0 10px;display: inline-block;">
+                        <input type="text" class="serch_text" placeholder="输入搜索内容" v-model="search_text" />
+                        <img src="/img/close1.png" class="close1" @click="search_close" />
+                        <button class="search" @click="search">搜索</button>
+                    </div>
+                    <Page :total="total_page" show-elevator show-total :page-size="per_page" @on-change="pageChange" class="page1"></Page>
+                </div>
+            </div>
+        </div>
+        <div class="pop" v-bind:class="{ display: onpreview }">
+            <iframe v-bind:src=frameurl class="skill_frame"></iframe>
+        </div>
+    </div>
+    <script src="/js/format.js"></script>
+    <script>
+        var w = $(window).width();
+        var h = $(window).height();
+        $("#app").width(w);
+        $("#app").height(h);
+        $("#menu").width(w * 0.1666);
+        var app = new Vue({
+            el: "#app",
+            data: {
+                search_text:'',
+                columns1: [
+                    {
+                        title: '序号',
+                        key: 'number',
+                        align: 'center',
+                        width: '10%',
+                        render(row, column, index) {
+                            var num = index + 1;
+                            return '<p class="td_title">' + num + '</p>';
+                        }
+                    }, {
+                        title: '封面图',
+                        key: 'title_url',
+                        width: '20%',
+                        render(row, column, index) {
+                            var url = row.title_url;
+                            return '<img style="width:110px;margin-top: 5px;" src="' + url + '" />'
+                        }
+                    }, {
+                        title: '技能标题',
+                        key: 'title',
+                        render(row, column, index) {
+                            return '<p class="td_title">' + row.title + '</p>';
+                        }
+                    }, {
+                        title: '发布时间',
+                        key: 'publish_time',
+                        sortable: true,
+                        render(row, column, index) {
+                            var time = new Date(parseInt(row.publish_time) * 1000).Format("yyyy-MM-dd hh:mm");
+                            return '<p class="td_title">' + time + '</p>';
+                        }
+                    }, {
+                        title: '操作',
+                        key: 'reason',
+                        render(row, column, index) {
+                            return `<i-button type="primary" class="edit" size="small" @click="edit(${index})">编辑</i-button><i-button size="small" class="del" @click="del(${index})">删除</i-button>`;
+                        }
+                    }],
+                total_page: 0, //总页数
+                per_page: 10, //每页显示的个数
+                list: [],
+                frameurl: '',
+                onpreview: false,
+                type:true,  //true为普通技能,false为搜索技能
+            },
+            methods: {
+                rowClassName(row, index) {
+                    var num = index % 2;
+                    if (num == 0) {
+                        return 'single';
+                    } else if (num == 1) {
+                        return 'double';
+                    }
+                },
+                pageChange(index) {
+                    if(this.type){
+                        this.ajaxlist(index - 1);
+                    }else{
+                        this.s_method(index-1);
+                    }                 
+                },
+                ajaxlist(page) {
+                    var self = this;
+                    this.$http.get("/sel/myskill?page=" + page).then(res => {
+                        self.page += 1;
+                        var data = res.body.out;
+                        self.list = data.arr;
+                        self.total_page = data.count;
+                    })
+                },
+                edit(index) {
+                    var type = this.list[index].publish_type;
+                    var id = this.list[index].id;
+                    this.onpreview = true;
+                    if (type == "video") {
+                        this.frameurl = 'edit_video.html?id=' + id;
+                    } else if (type == "graphic") {
+                        this.frameurl = 'edit_pic.html?id=' + id;
+                    } else {
+                        this.frameurl = 'edit_activity.html?id=' + id;
+                    }
+                },
+                del(index) {
+                    var r = confirm("确认要删除吗？");
+                    if (r != true) {
+                        return;
+                    }
+                    var id = this.list[index].id;
+                    this.$http.post("/skill/del", { id: id }).then(res => {
+                        var data = res.body.out;
+                        if (data.status == "ok") {
+                            this.$Message.success('删除成功');
+                            this.ajaxlist(0)
+                        }
+                    })
+                },
+                close_frame: function () {
+                    this.onpreview = false;
+                    this.frameurl = '';
+                },
+                search:function(){
+                    this.type = false;
+                    if(this.search_text){
+                        this.s_method(0);
+                    }else{
+                        this.$Message.error('请输入搜索内容');
+                        return ; 
+                    }
+                },
+                search_close:function(){
+                    this.search_text = "";
+                    this.ajaxlist(0);
+                },
+                s_method:function(page){
+                    var self = this;
+                    this.$http.get("/user/skill_search?page="+page+"&text="+this.search_text).then(res => {
+                        var data = res.body.out;
+                        self.list = data.skills;
+                        self.total_page = data.count;
+                    })
+                }
+            },
+            ready: function () {
+                this.$Message.config({
+                    top: 310,
+                    duration: 3
+                });
+                this.ajaxlist(0);
+            }
+        })
+        function close() {
+            app.close_frame();
+        }
+    </script>
+</body>
+
+</html>

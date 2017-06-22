@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>认证审核</title>
+    <link rel="stylesheet" type="text/css" href="/css/iview.css">
+    <link rel="stylesheet" type="text/css" href="../css/audit_auth.css?v=a303b04">
+    <!--<link rel="stylesheet" type="text/css" href="../css/common.css?v=e536d87">-->
+    <link rel="stylesheet" type="text/css" href="../css/menu.css?v=0c06b59">
+    <script type="text/javascript" src="/js/vue.min.js"></script>
+    <script type="text/javascript" src="/js/iview.min.js"></script>
+    <script type="text/javascript" src="/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/js/vue-resource.min.js"></script>
+    <script type="text/javascript" src="../js/admin_islogin.js?v=e84a69f"></script>
+</head>
+
+<body>
+    <div id="app">
+        <div class="row_left">
+            <iframe src="back_menu.html" class="menu_frame"></iframe>
+        </div>
+        <div class="row_right">
+            <div class="nav">
+                <ul>
+                    <li>
+                        <a href="audit_skill.html">
+                            <p>技能审核</p><span>0</span></a>
+                    </li>
+                    <li class="navli_active">
+                        <a href="audit_auth.html">
+                            <p>认证审核</p><span>0</span></a>
+                    </li>
+                    <li>
+                        <a href="audit_report.html">
+                            <p>举报技能</p><span>0</span></a>
+                    </li>
+                    <li>
+                        <a href="audit_user.html">
+                            <p>举报用户</p><span>0</span></a>
+                    </li>
+                    <li>
+                        <a href="audit_mess.html">
+                            <p>留言审查</p><span>0</span></a>
+                    </li>
+                    <li>
+                        <a href="audit_money.html">
+                            <p>提现审查</p><span>0</span></a>
+                    </li>
+                </ul>
+            </div>
+            <div class="wrapper">
+                <mytable></mytable>
+            </div>
+        </div>
+    </div>
+    <template id="main">
+        <i-table border :columns="columns1" :row-class-name="rowClassName" :data="list"></i-table>
+        <Page :total="total_page" :page-size="per_page" show-elevator show-total @on-change="pageChange" class="page1"></Page>
+        <Modal :visible.sync="modal" width="600" ok-text="保存" :style="{top: '30px'}"  @on-ok="keep">
+            <p class="name"><span class="e-s">姓&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp名:</span>{{edit_list.name}}</p>
+            <p class="number"><span class="e-s">身份证号:</span>{{edit_list.idcard}}</p>
+            <div class="box">
+                <span class="e-s tl">手持身份证照片</span>
+                <img class="e-img1" :src=edit_list.shouchi_url @click="handleView(edit_list.shouchi_url)">
+            </div>
+            <div class="box">
+                <span class="e-s tl">身份证照片</span>
+                <img class="e-img2" :src=edit_list.id_Z @click="handleView(edit_list.id_Z)">
+                <img class="e-img3" :src=edit_list.id_F @click="handleView(edit_list.id_F)">
+            </div>
+            <!--<div>
+                <i-button type="success" style="width:180px;" @click="audit('Y')">审核通过</i-button>
+                <p class="no_pass">审核不通过</p>
+                
+                <textarea class="no_pass_reason" placeholder="请输入不通过原因" v-model="edit_list.fail_text"></textarea>
+                <i-button type="error"  style="width:180px;" @click="audit('N')">提交</i-button>
+            </div>-->
+            <div class="reason">
+                <i-input :value.sync="edit_list.fail_text" placeholder="请输入..." style="width: 70%;outline:none;background-color: #fbfbfb;"></i-input>
+                <img src="/img/select.png" class="select" @click="select" />
+                <div class="option" v-if="option_show == true">
+                    <p v-for="err in errlist" @click="err_text(err.label)">{{err.label}}</p>
+                </div>
+                <button class=""  @click="audit('N')">不通过</button>
+            </div>
+            <button class="pass" @click="audit('Y')">通过</button>
+            <!--查看大图-->
+            <Modal title="查看大图" :visible.sync="view_check" width="700" :style="{top: '20px'}">
+                <img :src=bigview_url class="bigview">
+            </Modal>
+        </Modal>
+    </template>
+</body>
+<script>
+    var vueData = {
+        total_page: 0, //总页数
+        per_page: 10, //每页显示多少条
+        modal: false, //编辑的视窗不可见
+        view_check: false, //手持身份证放大图
+        columns1: [{
+            title: '姓名',
+            key: 'real_name',
+            sortable: true,
+            filters: [{
+                label: '金豆',
+                value: '金豆'
+            }, {
+                label: '谢',
+                value: '谢'
+            }],
+            filterMethod: function (value, row) {
+                return row.progress.indexOf(value) > -1;
+            },
+        }, {
+            title: '身份证',
+            key: 'card_num'
+        }, {
+            title: '上传时间',
+            key: 'apply_date'
+        }, {
+            title: '审核结果',
+            key: 'progress',
+            sortable: true,
+            align: 'center',
+            filters: [{
+                label: '处理中',
+                value: 'in_hand'
+            }, {
+                label: '审核通过',
+                value: 'pass'
+            }, {
+                label: '审核失败',
+                value: 'no_pass'
+            }],
+            filterMethod: function (value, row) {
+                //return row.progress.indexOf(value) > -1;
+                return true;
+            },
+        }, {
+            title: '处理备注',
+            key: 'fail_text'
+        }, {
+            title: '操作',
+            key: 'progress',
+            align: 'center',
+            render(row, column, index) {
+                if (row.progress == "处理中") {
+                    return `<i-button type="primary" size="small" @click="edit(${index})">等待审核</i-button>`;
+                } else if (row.progress == "审核通过") {
+                    return `<button class="pass1" >通过</button>`;
+                } else {
+                    return `<button class="pass1" >认证失败</button>`;
+                }
+            }
+        }],
+        list: [], //表单的总数据
+        bigview_url: '',
+        //点击编辑的数据
+        edit_list: {
+            id: "",
+            name: "",
+            idcard: "",
+            shouchi_url: "",
+            id_Z: "",
+            id_F: "",
+            fail_text: ""
+        },
+        errlist: [
+            {
+                value: 'sex',
+                label: '您的相片有问题'
+            },
+            {
+                value: 'error',
+                label: '您的相片比较模糊'
+            }
+        ],
+        option_show: false,
+    };
+    /*vue*/
+    var audit_type = []; //选中审核类型的值，如pass,no_pass
+    var myvm = Vue.component('mytable', {
+        template: '#main',
+        data: function () {
+            return vueData;
+        },
+        methods: {
+            rowClassName(row, index) {
+                var num = index % 2;
+                if (num == 0) {
+                    return 'single';
+                } else if (num == 1) {
+                    return 'double';
+                }
+            },
+            err_text(t) {
+                this.edit_list.fail_text = t;
+                this.option_show = false;
+            },
+            select() {
+                if (this.option_show) {
+                    this.option_show = false;
+                } else {
+                    this.option_show = true;
+                }
+            },
+            getPage(page, len) {
+                var bz = false;
+                if (this.per_page) {
+                    var self = this;
+                } else {
+                    //console.log("new 了一个新实例");
+                    var self = new myvm();
+                }
+                //page表示当前页码，len表示每页的长度
+                //var self = this;
+                len = len || self.per_page;
+                //console.log(`page:${page},len:${len}`);
+                //console.log(audit_type);
+                var f = audit_type.join(",");
+                //console.log("f的值是：" + f);
+                //获取分页
+                self.$http.get("/xadmin/getidcards?page=" + page + "&len=" + len + "&filter=" + f).then(res => {
+                    self.list = res.body.out.datas;
+                    //console.log(JSON.stringify(res.body));
+                    self.total_page = res.body.out.count;
+                    //console.log(self.total_page);
+                });
+            },
+            pageChange(index) {
+                this.getPage(index - 1);
+            },
+            //点击页面的编辑
+            edit(index) {
+                var id = this.list[index].id;
+                this.edit_list.id = id;
+                //获取分页里面的内容
+                this.$http.get("/xadmin/getidcard?id=" + id).then(res => {
+                    if (res.body.err == "") {
+                        var out = res.body.out.data;
+                        this.edit_list.name = out.real_name;
+                        this.edit_list.idcard = out.card_num;
+                        this.edit_list.shouchi_url = out.photo;
+                        this.edit_list.id_Z = out.front_side;
+                        this.edit_list.id_F = out.back_side;
+                        this.edit_list.fail_text = out.fail_text || "";
+                        this.modal = true;
+                    } else {
+
+                    }
+                });
+
+            },
+            //查看大图
+            handleView(url) {
+                this.view_check = true;
+                this.bigview_url = url;
+            },
+            //审核
+            audit(flag) {
+                var id = this.edit_list.id;
+                //审核通过
+                if (flag == "Y") {
+                    var status = "pass";
+                    var fail_text = "";
+                } else if (flag == "N") {
+                    //审核不通过
+                    var status = "no_pass";
+                    var fail_text = this.edit_list.fail_text;
+                    if (!fail_text) {
+                        this.$Message.error('请填写不通过的原因！');
+                        return;
+                    }
+                }
+                var post_data = {
+                    id: id,
+                    status: status,
+                    fail_text: fail_text
+                }
+                this.$http.post("/xadmin/checkidcard", post_data).then(res => {
+                    //提交完成之后关闭modal
+                    this.modal = false;
+                    //刷新列表
+                    this.getPage(0);
+                });
+            },
+        },
+        ready() {
+            this.$Message.config({
+                top: 200,
+                duration: 3
+            });
+            this.getPage(0);
+            this.$http.get("/xadmin/get_raw_count").then(res => {
+                var data = res.body;
+                $($(".nav ul li span")[0]).html(data.out.check_skill);
+                $($(".nav ul li span")[1]).html(data.out.identify_idcard);
+                $($(".nav ul li span")[2]).html(data.out.report);
+                $($(".nav ul li span")[3]).html(data.out.report_usr);
+                $($(".nav ul li span")[4]).html(data.out.check_comment);
+                $($(".nav ul li span")[5]).html(data.out.withdraw);
+            });
+        }
+    });
+    var vm = new Vue({
+        el: "#app"
+    })
+
+</script>
+<script type="text/javascript" src="../js/audit_auth.js?v=e017bfd"></script>
+
+</html>

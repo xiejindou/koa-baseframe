@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>觅技后台登录系统</title>
+    <link rel="stylesheet" type="text/css" href="/css/iview.css">
+    <link rel="stylesheet" type="text/css" href="../css/common.css?v=e536d87">
+    <script type="text/javascript" src="/js/vue.min.js"></script>
+    <script type="text/javascript" src="/js/iview.min.js"></script>
+    <script type="text/javascript" src="/js/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/vue.resource/1.2.1/vue-resource.min.js"></script>
+    <script>
+        $.get('/other/admin/is_login', function (data, err) {
+            console.log(data);
+            if (data.out.status) {
+                window.location.href = "index.html";
+            } else {
+                $("body").css('display', 'block');
+            }
+        })
+    </script>
+</head>
+<style>
+    body {
+        background-color: #ff5f00;
+        display: none;
+    }
+    
+    .login {
+        width: 800px;
+        margin: 15% auto;
+        background: #fff;
+        border-radius: 10px;
+        margin-bottom: 0;
+        height: 440px;
+    }
+    
+    .left {
+        height: 100%;
+        width: 320px;
+        float: left;
+        padding-left: 44px;
+    }
+    
+    .left .title {
+        font-size: 26px;
+        font-weight: 600;
+        font-style: normal;
+        font-stretch: normal;
+        line-height: normal;
+        letter-spacing: 0.3px;
+        color: #666666;
+        margin-top: 44px;
+    }
+    
+    .line {
+        background: #eee;
+        height: 1px;
+        width: 100%;
+    }
+    
+    .tel,
+    .code {
+        background: none;
+        border: none;
+        outline: none;
+        font-size: 14px;
+        line-height: 14px;
+        letter-spacing: 0.2px;
+        color: #343434;
+        padding-bottom: 10px;
+        margin-top: 40px;
+    }
+    
+    .close {
+        width: 31px;
+        vertical-align: bottom;
+        padding-bottom: 3px;
+        margin-left: 40px;
+        cursor: pointer;
+    }
+    
+    .s_code {
+        font-size: 14px;
+        font-weight: normal;
+        font-style: normal;
+        font-stretch: normal;
+        line-height: normal;
+        letter-spacing: 0.2px;
+        text-align: center;
+        color: #ff5f00;
+        background: none;
+        border: none;
+        margin-left: 30px;
+        outline: none;
+    }
+    
+    .right {
+        height: 100%;
+        width: 480px;
+        float: right;
+    }
+    
+    .right img {
+        height: 100%;
+    }
+    
+    .code_acitve {
+        color: #cbcbcb !important;
+        font-weight: normal;
+    }
+    
+    .login_btn {
+        margin-top: 36px;
+        margin-bottom: 50px;
+        width: 107px;
+        height: 36px;
+        border-radius: 100px;
+        background-color: #eeeeee;
+        border: none;
+        font-size: 16px;
+        font-weight: normal;
+        font-style: normal;
+        font-stretch: normal;
+        line-height: normal;
+        letter-spacing: 0.2px;
+        text-align: center;
+        color: #ffffff;
+    }
+    
+    .logo {
+        width: 87px;
+        vertical-align: middle;
+    }
+    
+    .company {
+        font-size: 12px;
+        font-weight: normal;
+        font-style: normal;
+        font-stretch: normal;
+        line-height: normal;
+        letter-spacing: 0.2px;
+        color: #9b9b9b;
+    }
+    
+    .copy {
+        text-align: center;
+        font-size: 14px;
+        letter-spacing: 0.2px;
+        color: #a93f00;
+        margin-top: 100px;
+    }
+    
+    .err {
+        font-size: 12px;
+        letter-spacing: 0.3px;
+        color: #e43f3c;
+    }
+    
+    .disabled1 {
+        background-color: #ff5f00 !important;
+    }
+    
+    input::-webkit-input-placeholder {
+        color: #9b9b9b;
+    }
+    
+    .third_login {}
+    
+    .third_login div {
+        display: inline-block;
+        cursor: pointer;
+    }
+    
+    .third_login img {
+        width: 40px;
+        vertical-align: middle;
+    }
+    
+    .third_login span {
+        font-family: PingFang-SC;
+        font-size: 14px;
+        font-weight: normal;
+        font-style: normal;
+        font-stretch: normal;
+        line-height: normal;
+        letter-spacing: 0.2px;
+        color: #ff8f4c;
+        vertical-align: text-top;
+    }
+    
+    .v_code {
+        width: 16%;
+        background: #fff;
+        margin: 0 auto;
+        position: fixed;
+        left: 42%;
+        top: 30%;
+        box-shadow: 0 2px 15px 0 rgba(0, 0, 0, 0.2);
+        padding:10px 20px;
+        text-align: center;
+    }
+    .v_code input{
+        height: 30px;
+        font-size: 14px;
+        color:#343434;
+        width: 100px;
+    }
+    .v_code button{
+        background-color: #ff5f00;
+        border:none;
+        color:#fff;
+        font-size: 14px;
+        height: 30px;
+        width: 50px;
+        text-align: center;
+    }
+</style>
+
+<body>
+    <div id="app">
+        <div class="login">
+            <div class="left">
+                <p class="title" v-html="title"></p>
+                <input type="tel" placeholder="请输入账号" id="tel" class="tel" v-model="name" autocomplete="off"></input>
+                <img src="/img/close.png" class="close" v-if="isActive == true" @click="clear_tel" />
+                <div class="line"></div>
+                <input type="password" placeholder="请输入密码" v-model="code" class="code" />
+                <img src="/img/close.png" class="close" v-if="isActive1 == true" @click="clear_code" />
+                <div class="line"></div>
+                <p class="err" v-if="errcode == true">账号或密码不正确，要不...再试试</p>
+                <button class="login_btn" @click="login" disabled="disabled" v-bind:class="{disabled1 : isActive}" v-html="btn"></button>
+                <br/>
+                <img src="/img/new_logo.png" class="logo" />
+                <!--<span class="company">深圳市善琏有限公司</span>-->
+            </div>
+            <div class="right">
+                <img src="/img/backstage.png" />
+            </div>
+        </div>
+        <div class="v_code" v-if="v_code == true">
+            <input type="text" maxlength="6" placeholder="请输入验证码" v-model="root_code">
+            <button @click="goroot">确认</button>
+        </div>
+        <p class="copy">© Copy right by 深圳善链科技有限公司</p>
+    </div>
+    <script>
+        var login = new Vue({
+            el: "#app",
+            data: {
+                name: '',
+                code: '',
+                isActive: false,
+                isActive1: false,
+                inphone: '',
+                errtel: false,
+                errcode: false,
+                title: '觅技后台登录系统',
+                is_logo: false,
+                btn: '登陆',
+                v_code:false,
+                root_code:''
+            },
+            methods: {
+                clear_code: function () {
+                    this.code = "";
+                    num = 0;
+                },
+                clear_tel: function () {
+                    this.name = "";
+                },
+                login: function () {
+                    var name = this.name;
+                    var pwd = this.code;
+                    this.$http.post("/other/admin/login", { name: name, pwd: pwd }).then(res => {
+                        var data = res.body;
+                        if (data.err == "") {
+                            if (data.out.role == "root") {
+                                this.v_code = true;
+                            } else {
+                                window.location.href = "index.html";
+                            }
+                        } else {
+                            this.errcode = true;
+                        }
+                    })
+                },
+                goroot:function(){
+                    var code = this.root_code;
+                    this.$http.post("/other/admin/verify", {code:code}).then(res => {
+                        var data = res.body;
+                        if (data.err == "") {
+                            window.location.href = "/xadmin/root_home";
+                        } else {
+                            this.$Message.error(data.err);
+                        }
+                    })
+                }
+            },
+            watch: {
+                name: function (val) {
+                    var length = val.length;
+                    $(".close_tel").show();
+                    $(".login_btn").attr("disabled", false);
+                    this.isActive = true;
+                },
+                code: function (val) {
+                    this.isActive1 = true;
+                }
+            },
+            ready: function () {
+                var self = this;
+                document.onkeydown = function (event) {
+                    var e = event || window.event || arguments.callee.caller.arguments[0];
+                    if (e && e.keyCode == 8) { // 按删除键
+
+                    }
+                };
+            }
+        })
+    </script>
+</body>
+
+</html>

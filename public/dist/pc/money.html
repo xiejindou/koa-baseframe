@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>觅技发布技能后台</title>
+    <link rel="stylesheet" type="text/css" href="/css/iview.css">
+    <link rel="stylesheet" type="text/css" href="../css/pc-pic.css?v=655251c">
+    <link rel="stylesheet" href="/css/style.css" type="text/css" />
+    <script type="text/javascript" src="/js/vue.min.js"></script>
+    <script type="text/javascript" src="/js/iview.min.js"></script>
+    <script type="text/javascript" src="/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/js/cropbox.js"></script>
+    <script src="https://cdn.jsdelivr.net/vue.resource/1.2.1/vue-resource.min.js"></script>
+    <script type="text/javascript" src="../js/pc_islogin.js?v=bee15b5"></script>
+    <style>
+        #content {
+            padding-top: 0;
+        }
+        
+        .main {
+            margin-bottom: 0;
+        }
+        h1{
+            font-size: 30px;
+            text-align: center;
+            margin-top:150px;
+            font-weight: normal;
+        }
+        p{
+            font-size: 30px;
+            text-align: center;
+            margin-top:10px;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div id="app">
+        <div id="menu">
+            <iframe src="menu.html" class="menu_frame"></iframe>
+        </div>
+        <div id="content">
+            <div class="wrapper">
+                <div class="main" style="background:#fbfbfb">
+                   <h1>该网页正在建设......</h1>
+                   <p>敬请期待</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="/js/format.js"></script>
+    <script>
+        var app = new Vue({
+            el: "#app",
+            data: {
+                
+            },
+            methods: {
+                
+                
+            },
+            ready: function () {
+                this.$Message.config({
+                    top: 310,
+                    duration: 3
+                });  
+                
+            }
+        })
+    </script>
+</body>
+
+</html>

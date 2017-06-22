@@ -1,0 +1,20 @@
+{
+    "err": "",
+    "out": {
+        "data": {
+            "id": 1112,
+            "user_id": "xxx",
+            "real_name": "刘淇",
+            "card_num": "411282199112141013",
+            "photo": "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1489385…F%2Fwww.hhdzhd.com%2Fuserfiles%2Fimage%2F201604%2F20160412134923772377.jpg",
+            "front_side": "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1489403…%2Fimg.ph.126.net%2FpUO6VAiuyg53IGTv1aUofw%3D%3D%2F1302947667210898715.jpg",
+            "back_side": "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1489403…%2F%2Fpic69.huitu.com%2Fres%2F20160428%2F864454_20160428161044827200_1.jpg",
+            "certificate_name": "国家软件水平考试中级",
+            "certificate_front": "/res/imgs/2231.jpg",
+            "certificate_back": "/res/imgs/2231.jpg",
+            "apply_date": 1415243523,
+            "progress": "in_hand",
+            "fail_text": ""
+        }
+    }
+}

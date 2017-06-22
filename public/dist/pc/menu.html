@@ -1,0 +1,148 @@
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>觅技发布技能后台</title>
+    <link rel="stylesheet" type="text/css" href="/css/iview.css">
+    <link rel="stylesheet" type="text/css" href="../css/pc-pic.css?v=655251c">
+    <link rel="stylesheet" href="/css/style.css" type="text/css" />
+    <script type="text/javascript" src="/js/vue.min.js"></script>
+    <script type="text/javascript" src="/js/iview.min.js"></script>
+    <script type="text/javascript" src="/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/js/cropbox.js"></script>
+    <script src="https://cdn.jsdelivr.net/vue.resource/1.2.1/vue-resource.min.js"></script>
+    <script type="text/javascript" src="../js/pc_islogin.js?v=bee15b5"></script>
+    <style>
+        #menu {
+            width: 100%;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div id="menu">
+        <div style="height: 25%;text-align: center;">
+            <img class="headurl" v-bind:src=u_headurl>
+            <br/>
+            <p class="uname" v-html="name">技能大师</p>
+            <img class="out" src="/img/out.png" @click="out" title="点击退出" />
+        </div>
+        <div class="gradient">
+            <ul class="list">
+                <li v-for="menu in list" @click="on(menu.url)">
+                    <a>
+                        <img v-bind:src=menu.img>
+                        <p>{{menu.title}}</p>
+                    </a>
+                </li>
+            </ul>
+            <div class="menu_bottom">
+                <div class="company">
+                    <img src="/img/o_logo.png" />
+                    <p>觅技<br/><span>与全世界分享你的技能</span></p>
+                </div>
+                <div class="line"></div>
+                <ul class="down">
+                    <li>
+                        <img src="/img/ios.png" />
+                        <p>苹果</p>
+                        <a href="">点击下载</a>
+                    </li>
+                    <li>
+                        <img src="/img/android.png" />
+                        <p>安卓</p>
+                        <a href="">点击下载</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    var app = new Vue({
+        el: '#menu',
+        data: {
+            name: '',
+            time: '2017-01-01',
+            u_headurl: '',   ///img/timg.jpg
+            list: [
+                {
+                    name: 'pic',
+                    title: '发布技能',
+                    url: 'pic.html',
+                    img: '/img/release.png'
+                },
+                {
+                    name: 'skill',
+                    title: '我的技能',
+                    url: 'skill.html',
+                    img: '/img/my_skill.png'
+                },
+                {
+                    name: 'money',
+                    title: '我的收益',
+                    url: 'money.html',
+                    img: '/img/my-earnings.png'
+                }
+            ]
+        },
+        methods: {
+            on(url) {
+                parent.window.location.href = url;
+            },
+            out: function () {
+                var logout = confirm("确定退出？");
+                if (logout) {
+                    this.$http.post("/user/logout").then(res => {
+                        var data = res.body;
+                        if (data.err == "") {
+                            // this.$Message.error('已退出');
+                            setTimeout(function () {
+                                parent.window.location.href = "login.html";
+                            }, 1000);
+                        } else {
+                            this.$Message.error(data.error);
+                        }
+                    });
+                }
+            }
+        },
+        ready: function () {
+            this.$http.get("/user/get").then(res => {
+                var data = res.body.out;
+                if(data.authentication == "no"){
+                    alert("您还没有进行身份认证,无法发布技能,请到APP中进行认证");
+                    this.$http.post("/user/logout").then(res => {
+                        var data = res.body;
+                        if (data.err == "") {
+                            // this.$Message.error('已退出');
+                            setTimeout(function () {
+                                parent.window.location.href = "login.html";
+                            }, 1000);
+                        } else {
+                            this.$Message.error(data.error);
+                        }
+                    });
+                }
+                this.u_headurl = data.headimgurl;
+                this.name = data.name;
+            })
+            var url = parent.window.location.href;
+            if (url.indexOf("pic") > 0 || url.indexOf("video") > 0) {
+                $($(".list li")[0]).addClass("list_act");
+                this.list[0].img = "/img/release_1.png";
+            } else if (url.indexOf("skill.html") > 0) {
+                $($(".list li")[1]).addClass("list_act");
+                this.list[1].img = "/img/my-skill_1.png";
+            }else if (url.indexOf("money") > 0) {
+                $($(".list li")[2]).addClass("list_act");
+                this.list[2].img = "/img/my-earnings_1.png";
+            }
+        }
+    })
+
+</script>
+
+</html>

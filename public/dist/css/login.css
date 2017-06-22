@@ -1,0 +1,167 @@
+h4, h5, h6,
+h1, h2, h3 {margin-top: 0;}
+ul, ol {margin: 0;}
+li{list-style: none;}
+p {margin: 0;}
+html, body{
+  font-family: 'Roboto-Regular';
+   font-size: 100%;
+   background:#fff; 
+   margin:0;
+}
+a {
+  text-decoration: none;
+}
+.logo{
+	width: 80%;
+	height: 30%;
+	margin:0 auto;
+	text-align: center;
+}
+.logo img{
+	margin-top: 25%;
+	border-radius: 50%;
+	width: 27%;
+	box-shadow: 0 5px 5px rgba(0, 0, 0, 0.09);
+}
+.login{
+	height: 14%;
+	width:100%;
+	margin:0 auto;
+    text-align: center;
+    position: relative;
+    margin-top:17%;
+}
+.login input{
+	border: none;
+    text-align: center;
+    outline: none;
+    vertical-align: middle;
+    background: transparent;
+}
+.err_box{
+	height: 2rem;
+	position: relative;
+    margin-bottom: 3%;
+}
+.err_acvtie{
+	background: rgb(253,81,31);   
+    color: #fff !important;
+    border-color: #fff;
+}
+.close_tel{
+    position: absolute;
+    width: 9%;
+    top: 18%;
+    right: 7%;
+    display: none;
+}
+.close_code{
+	position: absolute;
+    width: 9%;
+    top: 18%;
+    right: 7%;
+    display: none;
+}
+.err_tel{
+    font-size: 0.6rem;
+    position: absolute;
+    width: 22%;
+    height: 95%;
+    top: 5%;
+    left: 7%;
+    display: none;
+}
+#text_tel{
+	font-size: 0.8rem;
+    height: 100%;
+    color:rgb(52,52,52);
+    width: 66%;
+    
+}
+.tel{
+	font-size: 0.8rem;
+    width:66%;
+    height: 100%;
+    opacity: 0;
+   	position: absolute;
+   	top: 0;
+	left: 17%;
+}
+
+#err_code{
+    padding-top: 0.5rem;
+    margin-bottom: 1%;
+}
+.code{
+	font-size: 0.8rem;
+	width: 10%;
+	border-bottom:2px solid #ccc !important;
+	background: transparent;
+	margin:0;
+	padding:0;
+	color:rgb(255,95,0);
+	padding-bottom: 2%;
+    margin-bottom: 3%;
+    display: inline-block;
+    margin-left: 8%;
+}
+.code:first-child{
+	margin-left:0;
+}
+.code_list{
+	width: 65%;
+    margin: 0 auto;
+    text-align: left;
+    font-size: 0;
+    display: none;
+    height: 100%;
+}
+.in_code{
+    width: 65%;
+    font-size: 0.8rem;
+    position: absolute;
+    left: 17.5%;
+    text-align: left !important;
+    opacity: 0;
+    color: transparent;
+    bottom: 0%;
+    z-index: 0;
+    display: none;
+    letter-spacing: 33px;
+    height: 100%;
+}
+.s_code{
+	display: none;
+	font-size: 0.8rem;
+	background: none;
+	border:none;
+	color:rgb(255,95,0);
+	font-weight: 600;
+	width: 70%;
+	margin-top: 4%;
+	z-index: 9;
+}
+.code_acitve{
+	color:rgb(238,238,238) !important;
+	font-weight: normal;
+}
+.line{
+	height: 2px;
+	width: 80%;
+	margin: 0 auto;
+	background: rgb(238,238,238);
+}
+.loading{
+    width:6%;
+    animation: spin 1s linear infinite;
+    display: none;
+}
+@keyframes spin {
+    0% {
+           transform:rotate(0deg);
+     }
+     100% {
+           transform:rotate(360deg);
+     }
+}

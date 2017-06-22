@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>后台管理系统</title>
+    <link rel="stylesheet" type="text/css" href="/css/iview.css">
+    <link rel="stylesheet" type="text/css" href="../css/common.css">
+    <link rel="stylesheet" type="text/css" href="../css/menu.css">
+    <link rel="stylesheet" type="text/css" href="../css/admin_index.css">
+    <script type="text/javascript" src="/js/vue.min.js"></script>
+    <script type="text/javascript" src="/js/iview.min.js"></script>
+    <script type="text/javascript" src="/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/js/echarts.common.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/vue.resource/1.2.1/vue-resource.min.js"></script>
+    <script type="text/javascript" src="../js/admin_islogin.js"></script>
+</head>
+<style>
+    
+</style>
+
+<body>
+    <div id="app">
+        <div class="row_left">
+            <iframe src="back_menu.html" class="menu_frame"></iframe>
+        </div>
+        <div class="row_right">
+            <count></count>
+        </div>
+        <template id="main">
+            <Row>
+                <i-col span="8">
+                    <div class="title">
+                        <p class="title_name">技能数量</p>
+                        <p class="title_num">{{skill_total}}</p>
+                    </div>
+                </i-col>
+                <i-col span="8">
+                    <div class="title">
+                        <p class="title_name">注册用户</p>
+                        <p class="title_num">{{deal_total}}</p>
+                    </div>
+                </i-col>
+                <i-col span="8">
+                    <div class="title">
+                        <p class="title_name">订单量</p>
+                        <p class="title_num">{{trade}}</p>
+                    </div>
+                </i-col>
+            </Row>
+            <div class="wrapper">
+                <ul class="button_list">
+                    <li @click="categoy_btn($event,'all')" v-bind:class="{ listact: true}">
+                        <button>全部</button>
+                    </li>
+                    <li v-for="button in button_list" @click="categoy_btn($event,$index)">
+                        <button>{{button.name}}</button>
+                    </li>
+                    <li>
+                        <button @click="open" class="btn">编辑</button>
+                    </li>
+                </ul>
+                <div class="charts">
+                    <div class="check">
+                        <ul>
+                            <li @click="skill(1)"><img v-bind:src=all_url1 /><span style="color: #ff5f00;">全部技能</span></li>
+                            <li @click="skill(2)"><img v-bind:src=video_url1 /><span style="color: #4a90e2;">视频技能</span></li>
+                            <li @click="skill(3)"><img v-bind:src=pic_url1 /><span style="color: #7ed321;">图文技能</span></li>
+                        </ul>
+                    </div>
+                    <div class="select_time">
+                        <Date-picker type="date" placeholder="选择日期" style="width: 150px" @on-change="time"></Date-picker>
+                    </div>
+                    <ul class="radio_time sectime">
+                        <li v-for="time in timelist" @click="sectime($index,time.data)" v-bind:class="{ radio_active: $index==0 }">
+                            <p>{{time.data}}</p>
+                        </li>
+                    </ul>
+                    <div class="radio" style="margin-right: 3%">
+                        <div id="release_num" class="charts_box"></div>
+                    </div>
+                    <div class="radio">
+                        <div id="pay_num" class="charts_box"></div>
+                    </div>
+                    <div class="radio" style="margin-right: 3%">
+                        <div id="comment_num" class="charts_box"></div>
+                    </div>
+                    <div class="radio">
+                        <div id="read_num" class="charts_box"></div>
+                    </div>
+                </div>
+            </div>
+            <Modal :visible.sync="modal" title="编辑分类" width="800" ok-text="编辑完成" :style="{top: '10px'}" @on-ok="keep" @on-cancel="cancel">
+                <ul class="modal_list">
+                    <li v-for="button in modal_list">
+                        <!--<input type="text" v-model="button.name" @click="input_click($event,$index)">-->
+                        <p v-html="button.name" class=></p>
+                        <img v-bind:src="button.pic||this.noimg">
+                        <Upload v-ref:upload :on-success="onurl" :format="['jpg','jpeg','png']" :max-size="2048" :show-upload-list="false" multiple
+                            type="drag" name="pic" action="/other/upload_img">
+                            <div>
+                                <button @click="onnum($event,$index)" v-if="button.pic">修改图片</button>
+                                <button @click="onnum($event,$index)" class="addimg" v-if="button.pic == null">添加图片</button>
+                            </div>
+                        </Upload>
+                        <button @click="del($event,$index)">删除分类</button>
+                    </li>
+                </ul>
+                <div class="eidt_footer">
+                    <input type="text" class="newname" placeholder="填写分类名称" v-moel="a_value" />
+                    <button class="add" @click="add">添加</button>
+                </div>
+                <button @click="keep" class="keep">编辑完成</button>
+            </Modal>
+        </template>
+    </div>
+    <script src="../js/admin_index.js"></script>
+</body>
+</html>

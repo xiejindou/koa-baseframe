@@ -1,0 +1,171 @@
+body {
+    background-color: #ff5f00;
+    display: none;
+}
+
+.login {
+    width: 800px;
+    margin: 12% auto;
+    background: #fff;
+    border-radius: 10px;
+    margin-bottom: 0;
+    height: 440px;
+}
+
+.left {
+    height: 100%;
+    width: 320px;
+    float: left;
+    padding-left: 44px;
+}
+
+.left .title {
+    font-size: 26px;
+    font-weight: 600;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: 0.3px;
+    color: #666666;
+    margin-top: 44px;
+}
+
+.line {
+    background: #eee;
+    height: 1px;
+    width: 100%;
+}
+
+.tel,
+.code {
+    background: none;
+    border: none;
+    outline: none;
+    font-size: 14px;
+    line-height: 14px;
+    letter-spacing: 0.2px;
+    color: #343434;
+    padding-bottom: 10px;
+    margin-top: 40px;
+}
+
+.code {
+    width: 100px;
+}
+
+.close {
+    width: 31px;
+    vertical-align: bottom;
+    padding-bottom: 3px;
+}
+
+.s_code {
+    font-size: 14px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: 0.2px;
+    text-align: center;
+    color: #ff5f00;
+    background: none;
+    border: none;
+    margin-left: 30px;
+    outline: none;
+}
+
+.right {
+    height: 100%;
+    width: 480px;
+    float: right;
+}
+
+.right img {
+    height: 100%;
+}
+
+.code_acitve {
+    color: #cbcbcb !important;
+    font-weight: normal;
+}
+
+.login_btn {
+    margin-top: 36px;
+    margin-bottom: 50px;
+    width: 107px;
+    height: 36px;
+    border-radius: 100px;
+    background-color: #eeeeee;
+    border: none;
+    font-size: 16px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: 0.2px;
+    text-align: center;
+    color: #ffffff;
+}
+
+.logo {
+    width: 43px;
+    vertical-align: middle;
+}
+
+.company {
+    padding-left: 0.7rem;
+    font-size: 17px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: 0.2px;
+    color: #9b9b9b;
+}
+
+.copy,.copy a {
+    text-align: center;
+    font-size: 14px;
+    letter-spacing: 0.2px;
+    color: #a93f00;
+    margin-top: 100px;
+}
+
+.err {
+    font-size: 12px;
+    letter-spacing: 0.3px;
+    color: #e43f3c;
+    margin-top: 4px;
+}
+
+.disabled1 {
+    background-color: #ff5f00 !important;
+}
+
+input::-webkit-input-placeholder {
+    color: #9b9b9b;
+}
+
+.third_login {}
+
+.third_login div {
+    display: inline-block;
+    cursor: pointer;
+}
+
+.third_login img {
+    width: 40px;
+    vertical-align: middle;
+}
+
+.third_login span {
+    font-family: PingFang-SC;
+    font-size: 14px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: 0.2px;
+    color: #ff8f4c;
+    vertical-align: text-top;
+}

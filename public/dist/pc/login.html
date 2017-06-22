@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>技能大师登录系统</title>
+    <link rel="stylesheet" type="text/css" href="/css/iview.css">
+    <link rel="stylesheet" type="text/css" href="../css/common.css?v=e536d87">
+    <link rel="stylesheet" type="text/css" href="../css/pc-login.css?v=c1382f9">
+    <script type="text/javascript" src="/js/vue.min.js"></script>
+    <script type="text/javascript" src="/js/iview.min.js"></script>
+    <script type="text/javascript" src="/js/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/vue.resource/1.2.1/vue-resource.min.js"></script>
+    <script>
+        $.get('/user/is_login', function (data, err) {
+            // console.log(data);
+            if (data.login == true) {
+                window.location.href = "pic.html";
+            } else {
+                $("body").css('display', 'block');
+            }
+        })
+    </script>
+
+</head>
+
+<body>
+    <div id="app">
+        <div class="login">
+            <div class="left">
+                <p class="title" v-html="title"></p>
+                <input type="tel" placeholder="请输入手机号" id="tel" class="tel" v-model="phone" maxlength="13" autocomplete="off"></input>
+                <img src="/img/close.png" class="close" v-if="isActive == true" style="margin-left: 40px;" @click="clear_tel" />
+                <div class="line"></div>
+                <p class="err" v-if="errtel == true">这肯定是个假的手机号</p>
+                <input type="text" placeholder="请输入验证码" v-model="code" class="code" maxlength="6" />
+                <img src="/img/close.png" class="close" v-if="isActive1 == true" @click="clear_code" />
+                <button class="s_code" v-if="isActive == true" @click="send">发送验证码</button>
+                <div class="line"></div>
+                <p class="err" v-if="errcode == true">验证码不对...再试试</p>
+                <button class="login_btn" @click="post_code" disabled="disabled" v-bind:class="{disabled1 : isActive}" v-html="btn"></button>
+                <br/>
+                <div class="third_login" v-if="is_logo == false">
+                    <div @click="wx">
+                        <img src="/img/wechat.png" />
+                        <span>微信登陆</span>
+                    </div>
+                    <div @click="qq" style="margin-left:35px;">
+                        <img src="/img/qq.png" />
+                        <span>QQ登陆</span>
+                    </div>
+                </div>
+                <img src="/img/mi_logo.png" class="logo" v-if="is_logo == true" />
+                <span class="company" v-if="is_logo == true">觅技</span>
+            </div>
+            <div class="right">
+                <img src="/img/loginshow.png" />
+            </div>
+        </div>
+        <p class="copy">Copyright©深圳市善链科技有限公司&nbsp;| &nbsp;<a href="http://www.miitbeian.gov.cn/" target="_blank">粤ICP备17017563号-1</a></p>
+    </div>
+    <script>
+        var login = new Vue({
+            el: "#app",
+            data: {
+                phone: '',
+                code: '',
+                isActive: false,
+                isActive1: false,
+                inphone: '',
+                errtel: false,
+                errcode: false,
+                title: '技能发布后台',
+                is_logo: false,
+                btn: '登陆',
+                is_third: false,   //是否第三方登陆
+                token: '',   //第三方扫描之后返回的token
+                wxobj: {
+                    appid: "wx21f574d9ffb6845f",
+                    redirect_uri: encodeURIComponent("http://skill.szshanlian.com/wx-web/callback"),
+                    scope: "snsapi_login"
+                }
+            },
+            methods: {
+                clear_code: function () {
+                    this.code = "";
+                    num = 0;
+                },
+                clear_tel: function () {
+                    this.phone = "";
+                },
+                txt_tel: function (t, h) {
+                    if (h == 3) {
+                        var t1 = t + "-";
+                        return t1;
+                    } else if (h == 4) {
+                        var t1 = t.substring(0, 3);
+                        var t2 = t.substring(3, 4);
+                        if (t2 == '-') {
+                            return t1;
+                        }
+                        return t1 + '-' + t2;
+                    } else if (h == 9) {
+                        var t1 = t.substring(0, 8);
+                        var t2 = t.substring(8, 9);
+                        if (t2 == '-') {
+                            return t1;
+                        }
+                        return t1 + '-' + t2;
+                    } else if (h == 8) {
+                        var t1 = t + "-";
+                        return t1;
+                    } else {
+                        return t;
+                    }
+                },
+                send: function () {
+                    $(".in_code").show();
+                    this.get_code();
+                    var num = 60;
+                    $(".s_code").html("重新发送(" + num + "S)");
+                    $(".s_code").attr("disabled", "disabled");
+                    $(".s_code").addClass('code_acitve');
+                    var time = setInterval(function () {
+                        if (num == 0) {
+                            clearInterval(time);
+                            $(".s_code").attr("disabled", false);
+                            $(".s_code").removeClass('code_acitve');
+                            $(".s_code").html("重新发送");
+                            return;
+                        }
+                        num = num - 1;
+                        $(".s_code").html("重新发送(" + num + "S)");
+                    }, 1000);
+                },
+                get_code: function () {
+                    var myphone = this.inphone;
+                    $.ajax({
+                        url: '/login/sendCode',
+                        type: 'post',
+                        dataType: 'json',
+                        data: {
+                            tel: myphone
+                        },
+                        success: function (data) {
+                            // console.log(data);
+                        },
+                        err: function (error) {
+                            console.log(error);
+                        }
+                    })
+                },
+                post_code: function () {
+                    var tel = this.inphone;
+                    var code = this.code;
+                    var self = this;
+                    if (this.is_third) {
+                        var type = this.getQueryString("type");
+                        if (type == "wx") {
+                            var url = "/wx-web/verifyCode";
+                        } else {
+                            var url = "/qq-web/verifyCode";
+                        }
+                        //绑定手机号码
+                        this.$http.post(url, { tel: tel, code: code, token: this.token }).then(res => {
+                            if (!res.err) {
+                                window.location.href = "pic.html";
+                            }
+                        });
+                    } else {
+                        $.ajax({
+                            url: '/login/verifyCode',
+                            type: 'post',
+                            dataType: 'json',
+                            data: {
+                                tel: tel,
+                                code: code,
+                                type: 0
+                            },
+                            success: function (data) {
+                                $('.loading').hide();
+                                if (data.err == "验证码错误") {
+                                    this.errcode = true;
+                                }
+                                if (data.err == "") {
+                                    window.location.href = "pic.html";
+                                }
+
+                            }
+                        })
+                    }
+                },
+                //微信登陆
+                wx: function () {
+                    window.location.href = "https://open.weixin.qq.com/connect/qrconnect?appid=" + this.wxobj.appid + "&redirect_uri=" + this.wxobj.redirect_uri + "&response_type=code&scope=" + this.wxobj.scope + "&state=STATE#wechat_redirect";
+                },
+                //QQ登陆
+                qq: function () {
+                    //获取回调地址和key
+                    $.ajax({
+                        url: '/qq-web/prepare',
+                        type: 'post',
+                        dataType: 'json',
+                        success: function (data) {
+                            var callbackUrl = data.out.callbackUrl;
+                            var appid = data.out.appid;
+                            var redirect_uri = encodeURIComponent(callbackUrl);
+                            var state = "skill-master";
+                            var url = "https://graph.qq.com/oauth2.0/authorize?response_type=code&client_id=" + appid + "&redirect_uri=" + redirect_uri + "&state=" + state;
+                            window.location.href = url;
+                        }
+                    })
+                },
+                //获取url参数
+                getQueryString: function (name) {
+                    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+                    var r = window.location.search.substr(1).match(reg);
+                    if (r != null) return unescape(r[2]); return null;
+                },
+                //绑定手机号码页面
+                bind_phone: function (boolean) {
+                    //boolean表示xrh请求返回的错误状态
+                    if (boolean) {
+                        this.is_third = true;
+                        this.btn = "绑定";
+                        this.title = "绑定手机号";
+                        this.is_logo = true;
+                        document.onkeydown = function (event) {
+                            var e = event || window.event || arguments.callee.caller.arguments[0];
+                            if (e && e.keyCode == 8) { // 按删除键
+                            }
+                        };
+                    } else {
+                        //token不对
+                        window.location.href = "/dist/pc/login.html"
+                    }
+
+                }
+            },
+            watch: {
+                phone: function (val) {
+                    var length = val.length;
+                    $(".close_tel").show();
+                    var tel = '';
+                    tel = this.txt_tel(val, length);
+                    //console.log(length);
+                    this.errtel = false;
+                    if (length == 13) {
+                        //验证手机号
+                        var list = val.split("-");
+                        var phone = list[0] + list[1] + list[2];
+                        this.isActive = true;
+                        $("#tel").blur();
+                        $(".s_code").show();
+                        this.inphone = phone;
+                    }
+                    $("#tel").val(tel);
+                },
+                code: function (val) {
+                    var length = val.length;
+                    this.errcode = false;
+                    if (length == 0) {
+                        $('.login_btn').attr("disabled", "disabled");
+                    }
+                    if (length > 0) {
+                        this.isActive1 = true;
+                        $('.login_btn').removeAttr("disabled");
+                    }
+                }
+            },
+            ready: function () {
+                var self = this;
+                var freeze = this.getQueryString("freeze");
+                if (freeze == "1") {
+                    alert("当前帐号已被冻结！");
+                    window.location.href = "/";
+                    return;
+                }
+                var type = this.getQueryString("type");
+                var token = this.getQueryString("token");
+                this.token = token;
+                // console.log("type的值：" + type + ",\ntoken的值:" + token);
+                if (token) {
+                    if (type == "wx") {
+                        //处理微信扫描后的逻辑
+                        this.$http.put("/wx-web/after-scan", { token: token }).then(res => {
+                            var data = res.body;
+                            // console.log(JSON.stringify(data, null, 4));
+                            this.bind_phone(!data.err);
+                        });
+                    } else if (type == "qq") {
+                        //处理qq扫描后的逻辑
+                        this.$http.put("/qq-web/after-scan", { token: token }).then(res => {
+                            var data = res.body;
+                            // console.log(JSON.stringify(data, null, 4));
+                            this.bind_phone(!data.err);
+                        });
+                    }
+                }
+
+
+
+            }
+        })
+    </script>
+</body>
+
+</html>

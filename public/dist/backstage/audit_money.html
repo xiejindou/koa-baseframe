@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>提现审查</title>
+    <link rel="stylesheet" type="text/css" href="/css/iview.css">
+    <link rel="stylesheet" type="text/css" href="../css/menu.css?v=0c06b59">
+    <script type="text/javascript" src="/js/vue.min.js"></script>
+    <script type="text/javascript" src="/js/iview.min.js"></script>
+    <script type="text/javascript" src="/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/js/vue-resource.min.js"></script>
+    <script type="text/javascript" src="../js/admin_islogin.js?v=e84a69f"></script>
+</head>
+<style>
+    body,
+    html {
+        height: 100%;
+    }
+    
+    #app {
+        height: 100%;
+    }
+    
+    .ivu-menu-item {
+        width: 50%;
+        text-align: center;
+    }
+    
+    iframe {
+        width: 100%;
+        height: 91%;
+        margin-top: 1px;
+        min-height: 440px;
+    }
+    
+    .page1 {
+        margin-top: 25px;
+        float: right;
+        padding-right: 10px;
+    }
+    
+    .nopass {
+        color: #ff5f00;
+        font-size: 14px;
+        cursor: pointer;
+    }
+    
+    .pass {
+        color: #666;
+        font-size: 14px;
+    }
+    
+    .all_pass {
+        height: 32px;
+        width: 91px;
+        border-radius: 0;
+        margin-top: 25px;
+        float: right;
+        margin-right: 20px;
+    }
+    
+    .all_pass:hover {
+        background: #e6742f;
+    }
+    
+    .audit {
+        display: inline-block;
+        background-color: #ffffff;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.13);
+        position: fixed;
+    }
+    
+    .ivu-modal-header,
+    .ivu-modal-footer,
+    .ivu-modal-close {
+        display: none;
+    }
+    
+    
+    .errlist li {
+        margin-bottom: 15px;
+    }
+    
+    .errlist img {
+        width: 20px;
+        height: 20px;
+        vertical-align: bottom;
+        margin-right: 5px;
+    }
+    
+    .errlist p {
+        display: inline-block;
+        font-size: 14px;
+        color: #ff5f00;
+    }
+    
+    .confim {
+        width: 80px;
+        height: 35px;
+        border-radius: 0;
+        font-size: 16px;
+    }
+    
+    .confim:hover {
+        background: #e6742f;
+    }
+    
+    .iframe {
+        width: 423px;
+        height: 667px;
+        display: inline-block;
+        margin-top: 70px;
+        min-height: 440px;
+        min-width: 320px;
+        background: #fff;
+        border: none;
+        box-shadow: 0 2px 15px 0 rgba(0, 0, 0, 0.2);
+        overflow: scroll;
+        padding: 0 30px;
+    }
+    
+    .iframe li {
+        border-bottom: solid 1px #eeeeee;
+        padding-bottom: 14px;
+        text-align: left;
+        position: relative;
+        margin-top: 14px;
+    }
+    
+    .order_name {
+        font-size: 16px;
+        font-weight: 500;
+        letter-spacing: 0.1px;
+        color: #666666;
+        display: inline-block;
+        vertical-align: top;
+    }
+    
+    .order_time {
+        font-size: 16px;
+        letter-spacing: 0.2px;
+        color: #9b9b9b;
+        display: inline-block;
+        margin-left: 7px;
+    }
+    
+    .order_title {
+        font-size: 15px;
+        font-weight: 300;
+        letter-spacing: 0.2px;
+        color: #343434;
+    }
+    
+    .order_num {
+        font-size: 15px;
+        font-weight: 300;
+        letter-spacing: 0.2px;
+        color: #343434;
+    }
+    
+    .order_money {
+        font-size: 15px;
+        font-weight: 300;
+        letter-spacing: 0.2px;
+        color: #343434;
+    }
+    
+    .order_change {
+        font-size: 16px;
+        font-weight: 600;
+        letter-spacing: 0.1px;
+        color: #ff5f00;
+        position: absolute;
+        top: 0;
+        right: 0;
+    }
+    
+    .negative {
+        color: #45b034;
+    }
+    
+    .pop {
+        width: 100%;
+        height: 100%;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 1000;
+        background-color: rgba(0, 0, 0, 0.5);
+        text-align: center;
+        font-size: 0;
+    }
+    
+    .seebox {
+        background: #fff;
+        display: inline-block;
+        vertical-align: top;
+        margin-top: 70px;
+        margin-left: 0;
+        padding: 30px 27px;
+        text-align: left;
+        position: relative;
+        width: 423px;
+        height: 667px;
+    }
+    
+    .headurl {
+        width: 84px;
+        height: 84px;
+        border-radius: 50%;
+        vertical-align: top;
+    }
+    
+    .user_right {
+        display: inline-block;
+        padding: 12px;
+    }
+    
+    .name {
+        font-size: 24px;
+        letter-spacing: 0.2px;
+        color: #343434;
+    }
+    
+    .tel {
+        font-size: 16px;
+        font-weight: 300;
+        letter-spacing: 0.2px;
+        color: #343434;
+    }
+    
+    .money_count {
+        margin-top: 30px;
+    }
+    
+    .money_num {
+        display: inline-block;
+        text-align: left;
+    }
+    
+    .money_num .title {
+        font-size: 16px;
+        letter-spacing: 0.2px;
+        color: #9b9b9b;
+    }
+    
+    .money_num .money {
+        font-size: 40px;
+        font-weight: 600;
+        letter-spacing: 0.2px;
+        color: #ff5f00;
+    }
+    
+    .reason {
+        width: 100%;
+        height: 45px;
+        margin-top: 150px;
+        background-color: #ffffff;
+        box-shadow: 0 2px 4px 0 rgba(255, 95, 0, 0.16);
+        border: solid 1px #ff5f00;
+        position: relative;
+        font-size: 0;
+    }
+    
+    .pass {
+        width: 100%;
+        height: 46px;
+        background-color: #ff5f00;
+        box-shadow: 0 2px 4px 0 rgba(255, 95, 0, 0.16);
+        font-size: 16px;
+        letter-spacing: 0.1px;
+        text-align: center;
+        color: #ffffff;
+        text-align: center;
+        margin-top: 20px;
+        cursor: pointer;
+    }
+    
+    .reason button {
+        height: 100%;
+        width: 20%;
+        vertical-align: middle;
+        font-size: 16px;
+        letter-spacing: 0.1px;
+        text-align: center;
+        color: #ff5f00;
+        cursor: pointer;
+    }
+    
+    .ivu-input {
+        height: 43px;
+        border: none;
+        /*border-right:1px solid #eee; */
+    }
+    
+    .select {
+        vertical-align: top;
+        height: 100%;
+        cursor: pointer;
+        /*border-right: 1px solid #eee;*/
+    }
+    
+    .option {
+        width: 70%;
+        position: absolute;
+        top: 45px;
+        left: 0;
+        /*padding-bottom: 10px;*/
+        background: #fbfbfb;
+    }
+    
+    .option p {
+        font-size: 12px;
+        color: #9b9b9b;
+        border-top: solid 1px #cecece;
+        /*margin-top: 10px;*/
+        cursor: pointer;
+        padding: 8px;
+        transform-origin: center top 0px;
+    }
+</style>
+
+<body>
+    <div id="app">
+        <div class="row_left">
+            <iframe src="back_menu.html" class="menu_frame"></iframe>
+        </div>
+        <div class="row_right">
+            <div class="nav">
+                <ul>
+                    <li>
+                        <a href="audit_skill.html">
+                            <p>技能审核</p><span>0</span></a>
+                    </li>
+                    <li>
+                        <a href="audit_auth.html">
+                            <p>认证审核</p><span>0</span></a>
+                    </li>
+                    <li>
+                        <a href="audit_report.html">
+                            <p>举报技能</p><span>0</span></a>
+                    </li>
+                    <li>
+                        <a href="audit_user.html">
+                            <p>举报用户</p><span>0</span></a>
+                    </li>
+                    <li>
+                        <a href="audit_mess.html">
+                            <p>留言审查</p><span>0</span></a>
+                    </li>
+                    <li class="navli_active">
+                        <a href="audit_money.html">
+                            <p>提现审查</p><span>0</span></a>
+                    </li>
+                </ul>
+            </div>
+            <div class="wrapper">
+                <mytable></mytable>
+            </div>
+        </div>
+    </div>
+    <template id="main">
+        <i-table border :columns="columns1" :data="list" :row-class-name="rowClassName"></i-table>
+        <Page :total="total_page" :page-size="10" show-elevator show-total @on-change="pageChange" class="page1"></Page>
+        <i-button type="primary" class="all_pass" size="small" @click="all">一键通过</i-button>
+        <div class="pop" v-if="onpreview == true" @click="pop">
+            <div class="iframe" @click="nopop">
+                <ul class="pay_record">
+                    <!--<li>
+                        <p class="order_name">{{m_count.type}}</p>
+                        <p class="order_time">16-12-20 14:23</p>
+                        <p class="order_num">订单号:<span>{{m_count.id}}</span></p>
+                        <p class="order_money">充值总消费:<span>{{m_count.put_money}}元</span></p>
+                        <p class="order_title" v-if="">网页设计中,如何突破栅格的限制又保持协调？</p>
+                        <p class="order_change">{{m_count.get_num}}</p>
+                    </li>-->
+                </ul>
+            </div>
+            <div class="seebox" @click="nopop">
+                <img v-bind:src=headurl class="headurl" />
+                <div class="user_right">
+                    <p class="name" v-html="name">二狗子</p>
+                    <p class="tel">手机号<span v-html="tel">13512345678</span></p>
+                </div>
+                <div class="money_count">
+                    <div class="money_num">
+                        <p class="title">技能币总数</p>
+                        <p class="money" v-html="money_count">2000000</p>
+                    </div>
+                    <div class="money_num" style="margin-left:40px; ">
+                        <p class="title">可提现金额</p>
+                        <p class="money" v-html="money">234.23</p>
+                    </div>
+                </div>
+                <div class="reason">
+                    <i-input :value.sync="err_txt" placeholder="填写原因" style="width: 69%;outline:none;background-color: #fbfbfb;"></i-input>
+                    <img src="/img/select.png" class="select" @click="select" />
+                    <div class="option" v-if="option_show == true">
+                        <p v-for="err in errlist" @click="err_text(err.label)">{{err.label}}</p>
+                    </div>
+                    <button class="" style="border-right:1px solid #eee;" @click="release('fail')">不通过</button>
+                </div>
+                <button class="pass" @click="release('ok')">通过</button>
+            </div>
+        </div>
+    </template>
+    <script src="/js/format.js"></script>
+    <script>
+        var audit_type = [];
+        var vueData = {
+            total_page: 0, //总页数
+            page: 0, //页数
+            modal: false, //编辑的视窗不可见
+            columns1: [{
+                title: '提现账号',
+                key: 'phone',
+            }, {
+                title: '姓名',
+                align: 'center',
+                key: 'name'
+            }, {
+                title: '支付宝账号',
+                align: 'center',
+                key: 'account'
+            }, {
+                title: '提现金额',
+                align: 'center',
+                key: 'money'
+            }, {
+                title: '申请时间',
+                align: 'center',
+                key: 'time'
+            }, {
+                title: '提现进度',
+                align: 'center',
+                key: 'comment_time',
+            }, {
+                title: '操作',
+                key: 'result',
+                align: 'center',
+                //width: 160,
+                render(row, column, index) {
+                    if (row.status == "in_hand") {
+                        return `<i-button type="primary" size="small" @click="edit(${index})">等待审核</i-button>`;
+                    } else if (row.status == "ok") {
+                        return `<p style='color: #343434;'>通过</p>`
+                    } else {
+                        return `<p style='color: #ff5f00;'>驳回</p>`
+                    }
+                },
+                filters: [{
+                    label: '未审核',
+                    value: 'in_hand'
+                }, {
+                    label: '通过',
+                    value: 'ok'
+                }, {
+                    label: '驳回',
+                    value: 'fail'
+                }],
+                filterMethod: function (value, row) {
+                    //return row.progress.indexOf(value) > -1;
+                    return true;
+                },
+            }],
+            list: [], //表单的总数据
+            errlist: [
+                {
+                    value: 'sex',
+                    label: '您的技能涉嫌含违法内容，只能帮您删除'
+                },
+                {
+                    value: 'error',
+                    label: '您的技能错误内容过多还请仔细检查，小编只能帮您退回草稿'
+                }
+            ],
+            errlabel: '',
+            id: '',
+            err_txt: '',
+            option_show: false,
+            onpreview: false,
+            name: '',
+            headurl: '',
+            tel: '',
+            money_count: '',
+            money: '',
+            money_list: []
+        }
+        var myvm = Vue.component('mytable', {
+            template: '#main',
+            data: function () {
+                return vueData
+            },
+            methods: {
+                rowClassName(row, index) {
+                    var num = index % 2;
+                    if (num == 0) {
+                        return 'single';
+                    } else if (num == 1) {
+                        return 'double';
+                    }
+                },
+                getPage(page) {
+                    //page表示当前页码，len表示每页的长度
+                    var self = this;
+                    if (this.page) {
+                        var self = this;
+                    } else {
+                        //console.log("new 了一个新实例");
+                        var self = new myvm();
+                    }
+                    var f = audit_type;
+                    var data = {
+                        page: self.page,
+                        filter: f
+                    }
+                    self.$http.post("/xadmin/withdraw", data).then(res => {
+                        var data = res.body;
+                        console.log(data)
+                        self.total_page = data.count;
+                        self.list = data.out.result;
+                    });
+                },
+                pageChange(index) {
+                    this.getPage(index - 1);
+                },
+                edit(index) {
+                    console.log(index);
+                    this.id = this.list[index].id;
+                    this.onpreview = true;
+                    $("body").addClass("scroll");
+                    this.$http.get("/xadmin/get_usr_records?id=" + this.id).then(res => {
+                        var data = res.body.out;
+                        // console.log(data)
+                        this.name = data.userInfo.name;
+                        this.headurl = data.userInfo.headimgurl;
+                        this.tel = data.userInfo.phone;
+                        this.money_count = data.userInfo.skill_point;
+                        this.money = data.userInfo.skill_point_draw;
+                        this.pay_record(data.records);
+
+                    });
+                },
+                pay_record: function (list) {
+
+                    $.each(list, function (index, val) {
+                        var html = '';
+                        console.log(val)
+                        html = '<li>';
+                        html += '<p class="order_name">' + val.type + '</p>';
+                        html += '<p class="order_time">' + new Date(parseInt(val.time) * 1000).Format("yyyy-MM-dd hh:mm") + '</p>';
+                        if (val.skill_id) {
+                            html += '<p class="order_title">' + val.skill_title + '</p>'
+                        } else if (val.type.indexOf('充值') > 0) {
+                            html += '<p class="order_num">订单号:<span>' + val.id + '</span></p><p class="order_money">充值总消费:<span>' + val.put_money + '元</span></p>'
+                        } else if (val.type.indexOf('失败') > 0) {
+                            html += '<p class="order_title">提现金额:' + val.put_money + '</p>'
+                        } else if (val.type == "提现到支付宝") {
+                            html += '<p class="order_title">提现金额:' + val.put_money + '</p>'
+                        }
+                        if (parseInt(val.get_num) > 0) {
+                            html += '<p class="order_change">' + val.get_num + '</p>'
+                        } else {
+                            html += '<p class="order_change negative">' + val.get_num + '</p>'
+                        }
+                        html += "</li>"
+                        $(".pay_record").append(html)
+                    })
+                },
+                err_text(t) {
+                    this.err_txt = t;
+                    this.option_show = false;
+                },
+                select() {
+                    if (this.option_show) {
+                        this.option_show = false;
+                    } else {
+                        this.option_show = true;
+                    }
+                },
+                release(status) {
+                    var self = this;
+                    var data = {
+                        id: [this.id],
+                        type: status
+                    }
+                    if (status == "fail") {
+                        if (!this.err_txt) {
+                            this.$Message.error('请填写原因！');
+                            return;
+                        }
+                        data.fail_reason = this.err_txt;
+                    }
+
+                    this.$http.post("/withdraw/reviewbyid", data).then(res => {
+                        self.$Message.success('审核完成');
+                        this.onpreview = false;
+                        $("body").removeClass("scroll");
+                        this.getPage(0);
+                    });
+                },
+                all() {
+                    var list = this.list;
+                    var self = this;
+                    var oklist = [];
+                    $.each(list, function (index, val) {
+                        console.log(val.status)
+                        if (val.status == "in_hand") {
+                            oklist.push(list[index].id);
+                        }
+                    })
+                    console.log(oklist);
+                    return;
+                    if (oklist.length == 0) {
+                        self.$Message.error('没有要审核的留言');
+                        return;
+                    }
+                    this.$http.post("/xadmin/reviewbyid", { id: oklist, type: 'ok' }).then(res => {
+                        var data = res.body.out;
+                        if (data.status == "ok") {
+                            self.$Message.success('审核完成');
+                            this.getPage(0);
+                        }
+                    });
+                },
+                nopop(ev) {
+                    ev.cancelBubble = true;
+                },
+                pop() {
+                    this.onpreview = false;
+                    $("body").removeClass("scroll");
+                },
+            },
+            ready() {
+                this.getPage(0);
+                this.$http.get("/xadmin/get_raw_count").then(res => {
+                    var data = res.body;
+                    $($(".nav ul li span")[0]).html(data.out.check_skill);
+                    $($(".nav ul li span")[1]).html(data.out.identify_idcard);
+                    $($(".nav ul li span")[2]).html(data.out.report);
+                    $($(".nav ul li span")[3]).html(data.out.report_usr);
+                    $($(".nav ul li span")[4]).html(data.out.check_comment);
+                    $($(".nav ul li span")[5]).html(data.out.withdraw);
+                });
+            }
+        });
+        // console.log(document)
+        var app = new Vue({
+            el: "#app"
+        })
+    </script>
+    <script type="text/javascript" src="../js/audit_money.js?v=fc2ca84"></script>
+</body>
+
+</html>

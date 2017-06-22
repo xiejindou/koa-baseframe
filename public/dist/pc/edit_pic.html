@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>技能大师发布技能后台</title>
+    <link rel="stylesheet" type="text/css" href="/css/iview.css">
+    <link rel="stylesheet" type="text/css" href="/css/wangEditor.min.css">
+    <link rel="stylesheet" type="text/css" href="../css/pc-pic.css?v=655251c">
+    <link rel="stylesheet" href="/css/style.css" type="text/css" />
+    <script type="text/javascript" src="/js/vue.min.js"></script>
+    <script type="text/javascript" src="/js/iview.min.js"></script>
+    <script type="text/javascript" src="/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/js/cropbox.js"></script>
+    <script src="https://cdn.jsdelivr.net/vue.resource/1.2.1/vue-resource.min.js"></script>
+    <script>
+        $.get('/user/is_login', function (data, err) {
+            if (data.login == false) {
+                alert("请先登录");
+                window.location.href = "login.html";
+            } else {
+                $("body").css('display', 'block');
+            }
+        })
+    </script>
+    <style>
+        #content {
+            margin-left: 0;
+            width: 100%;
+            padding-top: 0;
+        }
+        
+        #content::-webkit-scrollbar {
+            width: 0;
+        }
+        
+        .wangEditor-menu-container .menu-group {
+            margin-right: 350px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <div id="content">
+            <div class="wrapper">
+                <div class="main">
+                    <div class="info">
+                        <div class="left">
+                            <p class="url_tl">为技能加个封面吧</p>
+                            <p class="url_pro">封面图是显示在主页的缩略图</p>
+                            <div v-bind:class="{ dashed: isdashed }" style="width: 167px;height:122px;line-height: 120px;font-size: 30px;border:2px dashed  #ccc;float:left;margin-left: 40%;text-align: center;cursor: pointer;"
+                                @click="modal = true">
+                                <p v-if="isActive1 == true">+</p>
+                                <img v-bind:src=imgurl class="showimg" v-if="isActive == true" v-bind:class="{ display: isActive }">
+                            </div>
+                        </div>
+                        <Modal :visible.sync="modal" title="编辑封面" width="500" ok-text="确定" :style="{top: '50px'}" :mask-closable="false" @on-ok="keep"
+                            @on-cancel="cancel">
+                            <div class="top" v-bind:class="{ display: modal }">
+                                <p class="title">1.上传封面图</p>
+                                <p class="filename title">{{filename}}</p>
+                                <input type="file" v-model="filename" class="file" id="file" accept="image/png,image/jpg,image/jpeg" />
+                                <button class="oncover" @click="onfile">选择封面</button>
+                                <p class="cover_ti">*仅限JPG、PNG格式图片*</p>
+                            </div>
+
+                            <div class="bottom" v-bind:class="{ display: modal }">
+                                <p class="title">2.裁剪封面</p>
+                                <p class="cover_ti" style="margin-top: 5px;">*鼠标滚轮可放大缩小图片*</p>
+                                <div class="imageBox">
+                                    <div class="thumbBox"></div>
+                                    <div class="spinner" style="display: none">Loading...</div>
+                                </div>
+                            </div>
+                        </Modal>
+                        <div class="right">
+                            <div class="pop" v-if="showcatgoy == true" style="display:block">
+                                <div class="catgoy" v-if="showcatgoy == true" v-bind:class="{ display: showcatgoy }">
+                                    <p>请为技能选择一个分类</p>
+                                    <ul>
+                                        <li class="catgoylist" v-for="catgoy in catgoylist" @click="catlist(catgoy.name,catgoy.id,$index)">
+                                            <p>{{catgoy.name}}</p>
+                                        </li>
+                                    </ul>
+                                    <button class="catgoy_in" @click="catgoy_in">确认</button>
+                                </div>
+                            </div>
+                            <div class="skill">
+                                <div class="cat_show">
+                                    <p class="catgoy_tl">分类</p>
+                                    <button class="open_catgoy" @click="show" v-html="catgoyname" v-bind:class="{ ok_catgoy: ok_catgoy }"></button>
+                                    <img src="/img/arrow.png" class="arrow" />
+                                </div>
+                                <div class="charge_show">
+                                    <p class="catgoy_tl">教程收费</p>
+                                    <!--<span class="switch" v-bind:class="{ switch_act: switch }" @click="onswitch"></span>-->
+                                    <span v-html="money_type" class="money_type"></span>
+                                    <div v-if="switch == true" class="money_box" v-bind:class="{ display: switch }">
+                                        <p class="money_head">教程价格</p>
+                                        <label class="money_tl">元</label><input type="text" placeholder="0" class="money"
+                                            v-model="money">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box"></div>
+                    <div class="text">
+                        <input type="text" class="skill_title" v-model="skill_title" placeholder="请输入技能标题" maxlength="25">
+                        <div id="free" style="min-height: 550px;" @focus="free_f"></div>
+                        <div id="charge" style="min-height: 550px;display: none;" v-bind:class="{ display: switch }" @focus="change_f"></div>
+                    </div>
+                    <button class="give" @click="give">放弃修改</button>
+                    <button class="preview" @click="preview">预览技能</button>
+                </div>
+            </div>
+        </div>
+        <div class="pop" v-if="onpreview == true" v-bind:class="{ display: onpreview }">
+            <div style="display: inline-block;position: relative;padding-top:10px;">
+                <div class="seeframe">
+                    <img src="/img/low.png" style="width:100%;" class="low" />
+                    <p class="seetl" v-html="skill_title"></p>
+                    <div id="header">
+                        <div class="left">
+                            <img v-bind:src=u_headurl class="seeheadurl" />
+                            <p class="name" v-html="name"></p>
+                            <p class="time" v-html="time"></p>
+                        </div>
+                    </div>
+                    <div class="seefree" v-html="seefree">
+
+                    </div>
+                    <div class="pay" v-if="switch == true">
+                        <div class="line1"></div>
+                        <p class="pro">余下内容为收费部分</p>
+                        <div class="line1" style="right: 0;"></div>
+                    </div>
+                    <div class="seecharge" v-html="seecharge">
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="seebox">
+                <p class="see_title">首页预览</p>
+                <img src="/img/pre_title.png" class="seehome" />
+                <div class="skilldata">
+                    <ul>
+                        <li>
+                            <p class="title" v-html=skill_title>1231231231</p>
+                            <img v-bind:src=imgurl class="title_url" />
+                            <div>
+                                <img src="/img/comment_2.png" class="imgurl" />
+                                <span>999</span>
+                                <img src="/img/favour_2.png" class="imgurl" />
+                                <span>999</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <p class="seecatgoy">技能分类<span v-html="catgoyname"></span></p>
+                <button class="release" @click="release">发布</button>
+                <button class="seelook" @click="look">再想想</button>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="/js/wangEditor.js"></script>
+    <script type="text/javascript" src="../js/pc_edit.js?v=ec17f96">
+
+    </script>
+</body>
+
+</html>

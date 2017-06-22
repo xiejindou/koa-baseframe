@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>财务流水</title>
+    <link rel="stylesheet" type="text/css" href="/css/iview.css">
+    <link rel="stylesheet" type="text/css" href="../css/common.css">
+    <link rel="stylesheet" type="text/css" href="../css/menu.css">
+    <script type="text/javascript" src="/js/vue.min.js"></script>
+    <script type="text/javascript" src="/js/iview.min.js"></script>
+    <script type="text/javascript" src="/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/js/vue-resource.min.js"></script>
+    <script type="text/javascript" src="../js/admin_islogin.js"></script>
+</head>
+<style scoped>
+    .paging {
+        float: right;
+        margin-right: 10px;
+        margin-top: 10px;
+    }
+    
+    .nav {
+        text-align: right !important;
+    }
+    
+    .select {
+        display: inline-block;
+        border: 1px solid #ff5f00;
+        margin-right: 20px;
+        padding: 5px 10px;
+    }
+    
+    .ivu-date-picker {
+        display: inline-block;
+    }
+    
+    .ivu-input {
+        border: none;
+    }
+    
+    .sec_btn {
+        font-size: 16px;
+        letter-spacing: 0.1px;
+        text-align: center;
+        color: #ff5f00;
+        vertical-align: middle;
+        margin-left: 20px;
+    }
+</style>
+
+<body>
+    <div id="app">
+        <div class="row_left">
+            <iframe src="back_menu.html" class="menu_frame"></iframe>
+        </div>
+        <div class="row_right">
+
+
+            <mytable :datalist="message" ref="table"></mytable>
+
+        </div>
+    </div>
+    <template id="main">
+        <div class="nav">
+            <div class="select">
+                <Date-picker type="datetime" placeholder="开始时间" format="yyyy-MM-dd HH:mm" :value.sync="uptime" style="width: 200px"></Date-picker>
+                <span>至</span>
+                <Date-picker type="datetime" placeholder="结束时间" format="yyyy-MM-dd HH:mm" :value.sync="downtime" style="width: 200px"></Date-picker>
+                <button class="sec_btn" @click="query">查询</button>
+                <button class="sec_btn" @click="out_excel">一键导出</button>
+            </div>
+        </div>
+        <div class="wrapper">
+            <i-table border :columns="columns1" :data="data1" :row-class-name="rowClassName"></i-table>
+            <Page :total="total" :page-size="10" show-elevator @on-change="pagechange" class="paging"></Page>
+        </div>
+    </template>
+    <script src="/js/format.js"></script>
+    <script>
+        var h = $(window).height();
+        $("body").height(h);
+        Vue.component('mytable', {
+            template: '#main',
+            data: function () {
+                return {
+                    modal: false,
+                    mydata: '12',
+                    data1: [],
+                    total: 20,
+                    isActive: true,
+                    isActive1: false,
+                    id: 0,
+                    type: false,
+                    sp_name: '',
+                    category: '',
+                    url: '',
+                    uptime: '',
+                    downtime: '',
+                    imgurl: '',
+                    catgoyname: '选择分类',
+                    columns1: [{
+                        title: '手机号',
+                        key: 'phone',
+                        align: 'center'
+                    }, {
+                        title: '订单号',
+                        key: 'order_num',
+                        align: 'center',
+                    }, {
+                        title: '交易时间',
+                        key: 'time',
+                        align: 'center',
+                        sortable: true,
+                        render(row, column, index) {
+                            var time = new Date(parseInt(row.time) * 1000).Format("yyyy-MM-dd hh:mm");
+                            return `<p>` + time + `</p>`;
+                        },
+                    }, {
+                        title: '交易平台',
+                        key: 'order_type',
+                        align: 'center'
+                    }, {
+                        title: '订单类型',
+                        key: 'opera_type',
+                        align: 'center',
+                    }, {
+                        title: '交易金额(元)',
+                        key: 'price',
+                        align: 'center',
+                    }],
+                    categorylist: []
+                }
+            },
+            methods: {
+                rowClassName(row, index) {
+                    var num = index % 2;
+                    if (num == 0) {
+                        return 'single';
+                    } else if (num == 1) {
+                        return 'double';
+                    }
+                },
+                //分页获取页数
+                pagechange(page) {
+                    this.ajaxdata(page);
+                },
+                //加载分页数据
+                ajaxdata(page, start, end) {
+                    page = page - 1;
+                    var url = '/xadmin/money_records?page=' + page;
+                    if (this.uptime) {
+                        url += '&start_tm=' + this.uptime;
+                    }
+                    if (this.downtime) {
+                        url += '&end_tm=' + this.downtime;
+                    }
+                    this.$http.get(url).then(res => {
+                        var data = res.body;
+                        if (data.err == "") {
+                            this.data1 = data.out.datas;
+                            this.total = data.out.count;
+                            console.log(data);
+                        } else {
+                            self.$Message.error(data.error);
+                        }
+                    })
+                },
+                out_excel: function () {
+                    var url = '/xadmin/money_export';
+                    if (this.uptime) {
+                        url += '&start_tm=' + this.uptime;
+                    }
+                    if (this.downtime) {
+                        url += '&end_tm=' + this.downtime;
+                    }
+                    window.location.href = url;
+                },
+                query: function () {
+                    this.uptime = Date.parse(this.uptime) / 1000;
+                    this.downtime = Date.parse(this.downtime) / 1000;
+                    this.ajaxdata(0, this.uptime, this.downtime)
+                }
+            },
+            ready() {
+                var self = this;
+                //获取第一页数据
+                this.ajaxdata(1);
+            }
+        })
+        var app = new Vue({
+            el: '#app',
+            methods: {
+
+            },
+        })
+    </script>
+</body>
+
+</html>

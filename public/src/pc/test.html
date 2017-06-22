@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>视频测试</title>
+    <link rel="stylesheet" type="text/css" href="../css/iview.css">
+    <link rel="stylesheet" type="text/css" href="../css/common.css">
+    <script type="text/javascript" src="../js/vue.min.js"></script>
+    <script type="text/javascript" src="../js/iview.min.js"></script>
+    <script type="text/javascript" src="../js/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/vue.resource/1.2.1/vue-resource.min.js"></script>
+</head>
+<style>
+    
+</style>
+<body>
+    <input type="file" id="file" />
+</body>
+    <script>
+        $('#file').on('change', function(){
+            // var reader = new FileReader();
+            // reader.onload = function(e) {
+            //     options.imgSrc = e.target.result;
+            //     cropper = $('.imageBox').cropbox(options);
+            // }
+            // var url = this.files[0];
+            var url = $("#file").val();
+            console.log(url);
+            $("body").append('<video width="500" height="500" controls="controls"><source src="'+url+'" type="video/mp4" id="video" > </video> ')
+        })
+    </script>
+</html>

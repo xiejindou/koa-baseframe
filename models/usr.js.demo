@@ -1,0 +1,204 @@
+"use strict";
+/**
+ * 用户表
+ * 用户不可删除
+ */
+const util = require('../libs/utils');
+const Sequelize = require('sequelize');
+let tableName = 'usr';
+module.exports = {
+    tableName: tableName,
+    cols: {
+        id: {
+            type: Sequelize.STRING(100),
+            allowNull: false,
+            primaryKey: true,
+            comment: '用户id,uuid'
+        },
+        name: {
+            type: Sequelize.STRING(100),
+            allowNull: true,
+            comment: '用户名'
+        },
+        real_name: {
+            type: Sequelize.STRING(100),
+            allowNull: true,
+            comment: '用户的真实姓名，通过认证的用户真实姓名'
+        },
+        authentication: {
+            type: Sequelize.STRING(10),
+            defaultValue: 'no',
+            comment: '是否是认证用户，如果认证过则是"yes","in_hand"表示认证中，否则是no'
+        },
+        freeze: {
+            type: Sequelize.BOOLEAN,
+            defaultValue: false,
+            comment: '是否处于冻结状态'
+        },
+        sex: {
+            type: Sequelize.STRING(2),
+            allowNull: true,
+            comment: '1是男，2是女，0是未知'
+        },
+        phone: {
+            type: Sequelize.STRING(32),
+            allowNull: false,
+            unique: true,
+            comment: '手机号码'
+        },
+        password: {
+            type: Sequelize.STRING(100),
+            allowNull: true,
+            comment: '登陆密码,手机验证登录可不需要设置'
+        },
+        headimgurl: {
+            type: Sequelize.STRING(255),
+            allowNull: true,
+            comment: '用户头像'
+        },
+        birthday: {
+            type: Sequelize.INTEGER,
+            allowNull: true,
+            comment: '出生年月日'
+        },
+        province: {
+            type: Sequelize.STRING(100),
+            allowNull: true,
+            comment: '省份'
+        },
+        city: {
+            type: Sequelize.STRING(100),
+            allowNull: true,
+            comment: '城市'
+        },
+        introduction: {
+            type: Sequelize.TEXT,
+            defaultValue: '请一句话介绍自己',
+            comment: '个人介绍'
+        },
+        money: {
+            type: Sequelize.INTEGER,
+            defaultValue: 0,
+            comment: '该用户的资金账户，单位分'
+        },
+        skill_num: {　
+            type: Sequelize.INTEGER,
+            defaultValue: 0,
+            comment: '该用户发布的技能数量（不包括草稿）'
+        },
+        wechatInfo: {
+            type: Sequelize.JSONB,
+            allowNull: true,
+            comment: `用户的微信信息,结构如下：
+            {
+                //来自网页第三方登陆的用户信息
+                web:{
+                    unionid [string]  // 开放平台的联合id，微信唯一标识
+                    openid [string]  // 应用授权获取的openid
+                    nickname [string] // 微信昵称
+                    sex [string] // 1是男，2是女，0是未知
+                    headimgurl [string] // 头像
+                    country [string] // 国家
+                    province [string] // 省份
+                    city [string] // 城市
+                },
+                //来自app
+                app:{
+                    格式同上
+                }
+            }`
+        },
+        qqInfo: {
+            type: Sequelize.JSONB,
+            allowNull: true,
+            comment: `用户的qq信息,结构如下：
+            {
+                //网页登陆的qq信息
+                web:{
+                    openid [string]  // QQ的openid
+                    nickname [string] // QQ昵称
+                    sex [string] // 性别：1是男，2是女，0是未知
+                    headimgurl [string] // 头像
+                    country [string] // 国家
+                    province [string] // 省份
+                    city [string] // 城市
+                },
+                //app登陆的qq信息
+                app:{
+                    数据格式同上
+                }
+
+            }`
+        },
+        android_push_token: {
+            type: Sequelize.STRING(100),
+            allowNull: true,
+            comment: '友盟平台安卓推送的token'
+        },
+        ios_push_token: {
+            type: Sequelize.STRING(100),
+            allowNull: true,
+            comment: '友盟平台安卓推送的token'
+        },
+        invite_code: {
+            type: Sequelize.STRING(32),
+            allowNull: false,
+            comment: '邀请码'
+        }
+    },
+    sets: {
+        timestamps: true,
+        underscored: true,
+        freezeTableName: false,
+        tableName: tableName,
+        indexes: [{
+            fields: ["id"]
+        }],
+        classMethods: {
+            getNum: function *() { // 获取用户总数
+                let whereOption = {};
+                // if (type){
+                //     whereOption.publish_type = type;
+                // }
+                return yield this.count({ where: whereOption });
+            },
+            add_skill_num: function *(uid,trx){ // 增加技能数量
+                let trans = trx && {transaction: trx} || null;
+                let usr_obj = yield this.findById(uid);
+                yield usr_obj.increment('skill_num',trans);
+            },
+            del_skill_num: function *(uid,trx){ // 减少技能数量
+                let trans = trx && {transaction: trx} || null;
+                let usr_obj = yield this.findById(uid);
+                yield usr_obj.decrement('skill_num',trans);
+            },
+            add_money: function *(option){  // option : {uid: "xx",num: 34,trx: obj }
+                let usr_obj = yield this.findOne({ where: { id: option.uid }, attributes: ['id','money'] });
+                let incrementObj = {
+                    money: option.num
+                };
+                let tras = null;
+                if (option.trx) {
+                    tras = { transaction: option.trx };
+                }
+                yield usr_obj.increment(incrementObj, tras);
+            },
+            /**
+             * 获取用户的四项基本信息,
+             * 第二个参数表示获取信息的详细类型，可不传
+             * 默认获取字段： 'name', 'phone', 'headimgurl', 'introduction', 'authentication'
+             * flag=1 获取字段： 'name', 'phone', 'headimgurl', 'introduction', 'authentication','wechatInfo','qqInfo'
+             */
+            getBaseInfo: function* (id, flag) {
+                let attributes_arr = ['name', 'phone', 'headimgurl', 'introduction', 'authentication'];
+                if (flag == 1) {
+                    attributes_arr.push('wechatInfo', 'qqInfo');
+                }
+                return yield this.findOne({
+                    where: { id: id },
+                    attributes: attributes_arr
+                });
+            }
+        }
+    }
+};

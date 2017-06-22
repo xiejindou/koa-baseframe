@@ -1,18 +1,22 @@
-"use strict"
+'use strict';
 
-var router = require('koa-router')();
-const logger = require('../utils/logger');
+const Router = require('koa-router');
+const router = new Router();
+const log = require('../libs/logger').tag('test');
+const config = require('../config');
+const redis = config.redis;
 
-router.get('/', function*() {
-    this.body = "Welcom to test !";
+router.get('/', ctx => {
+//  this.redirect("/dist/pc/login.html");
+    ctx.body = "test ok";
 });
 
-router.get('/hello',function *(){
-	this.body = "hello to Koa";
+router.get('/redis', ctx => {
+    ctx.body = "test ok";
 });
 
-router.get('/haha.php',function *(){
-	this.body = "I am not php ...";
+router.get('/exit', ctx => {
+    process.exit(0);
 });
 
 module.exports = router;

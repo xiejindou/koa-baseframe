@@ -1,0 +1,25 @@
+//适配浏览器圆角
+.border-radius (@radius) {
+    border-radius: @radius;
+    -moz-border-radius: @radius;
+    -webkit-border-radius: @radius;
+}
+//字体大小，颜色
+.font (@color;@size){
+    font-size: @size;
+    color:@color;
+}
+//加粗
+.font (@color;@size;@weight){
+    font-weight:@weight;
+    font-size:@size; 
+    color:@color;
+}
+.header{
+    .title{
+        .font(#0f0,18px);
+    }
+    img{
+        width:60px;
+    }
+}
