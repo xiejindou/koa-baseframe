@@ -15,7 +15,7 @@ module.exports = function (){
             if (tm.getHours()==4 && global.day_task_tm!=cur_date) { // 每天凌晨４点钟触发一次
                 log.info("凌晨４点的定时任务已触发");
                 global.day_task_tm = cur_date;
-                // start_cp('hot_skill.js');
+                // start_cp('hot_skill.js');　　// 此处定时执行　'bin/crontab/hot_skill.js'脚本
             }
         }
         if (global.n%5==0){ // 每５分钟执行一次

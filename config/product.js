@@ -6,7 +6,7 @@ const Redis = require('ioredis');
 module.exports = {
     "port": 5043,
     "timeout": 30 * 20 * 1000,
-    "db_uri": "postgres://postgres:gL@sql2016@galilee.co:5432/skill_master",
+    "db_uri": "postgres://postgres:gL@sql2016@127.0.0.1:5432/db_name",
     "db_log_uri": "mongodb://localhost:27017/skill_logs",
     "log": {
         "level": "debug"
